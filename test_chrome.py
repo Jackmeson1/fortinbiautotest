@@ -7,7 +7,9 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 
 # 设置用户配置文件路径（例如 Windows 系统的默认 Profile 路径）
-chrome_options.add_argument(r"user-data-dir=C:\Users\test\AppData\Local\Google\Chrome\User Data")
+chrome_options.add_argument(
+    r"user-data-dir=C:\Users\test\AppData\Local\Google\Chrome\User Data"
+)
 
 # 如果你有多个配置文件，可以指定特定的 Profile 文件夹
 chrome_options.add_argument("profile-directory=Profile 1")

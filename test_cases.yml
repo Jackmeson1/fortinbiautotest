@@ -1,0 +1,8 @@
+- url: https://www.example.com
+  verdict: allow
+- url: https://www.dropbox.com
+  verdict: block
+- url: https://www.cisco.com
+  verdict: freeze
+- url: https://www.facebook.com
+  verdict: isolate

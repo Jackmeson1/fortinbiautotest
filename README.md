@@ -18,8 +18,15 @@ This project contains automated tests for the FortiNBI application.
    - Windows: `venv\Scripts\activate`
    - Unix or MacOS: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
+5. Install pre-commit hooks: `pre-commit install`
 
 ## Running Tests
+
+Start the mock HTTP server before executing the tests:
+
+```bash
+python mocks/simple_http_server.py &
+```
 
 To run all tests:
 

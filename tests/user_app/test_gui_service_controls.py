@@ -1,6 +1,8 @@
 import sys
 import time
+
 import pytest
+
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
 
@@ -21,7 +23,9 @@ class TestGUIServiceControls:
     def _get_status_label(self, app: FNBIApp):
         return app.main_window.child_window(auto_id="ServiceStateLabel")
 
-    def test_buttons_when_service_stopped(self, fnbi_app: FNBIApp, fnbi_service: FNBIService):
+    def test_buttons_when_service_stopped(
+        self, fnbi_app: FNBIApp, fnbi_service: FNBIService
+    ):
         """Start should be enabled and Restart disabled when the service is stopped."""
         fnbi_service.stop()
         fnbi_app.find_main_window()
@@ -33,7 +37,9 @@ class TestGUIServiceControls:
         assert start_btn.is_enabled()
         assert not restart_btn.is_enabled()
 
-    def test_buttons_when_service_running(self, fnbi_app: FNBIApp, fnbi_service: FNBIService):
+    def test_buttons_when_service_running(
+        self, fnbi_app: FNBIApp, fnbi_service: FNBIService
+    ):
         """Restart should be enabled and Start disabled when the service is running."""
         fnbi_service.start()
         fnbi_app.find_main_window()

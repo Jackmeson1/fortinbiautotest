@@ -1,19 +1,22 @@
+import logging
 import time
 
+import psutil
 from selenium import webdriver
 from selenium.common import TimeoutException, WebDriverException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.options import Options as EdgeOptions
-import logging
-import psutil
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 logger = logging.getLogger(__name__)
 
+
 class BrowserControl:
-    def __init__(self, browser_type="chrome", user_data_dir=None, profile_directory=None):
+    def __init__(
+        self, browser_type="chrome", user_data_dir=None, profile_directory=None
+    ):
         if browser_type == "chrome":
             chrome_options = Options()
             if user_data_dir:
@@ -116,7 +119,6 @@ class BrowserControl:
             time.sleep(0.5)
         return False
 
-
     def is_wsl_sandbox_opened(self):
         """Return True if a WSL based sandbox browser appears to be running."""
         for proc in psutil.process_iter(["name", "cmdline"]):
@@ -140,4 +142,3 @@ class BrowserControl:
 
         keywords = ["isolation", "sandbox", "forti", "secure"]
         return any(k in title or k in source for k in keywords)
-

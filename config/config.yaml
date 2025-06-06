@@ -4,7 +4,7 @@ browser:
   chrome_user_data_dir: "C:\\Users\\test\\AppData\\Local\\Google\\Chrome\\User Data"
   chrome_profile_directory: "Profile 1"
 test:
-  allowed_url: "https://www.example.com"
-  blocked_url: "https://www.dropbox.com"
-  freeze_url: "https://www.cisco.com"
-  isolate_url: "https://www.facebook.com"
+  allowed_url: "http://localhost:8000/allowed.html"
+  blocked_url: "http://localhost:8000/blocked.html"
+  freeze_url: "http://localhost:8000/freeze.html"
+  isolate_url: "http://localhost:8000/isolate.html"
