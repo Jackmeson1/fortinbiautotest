@@ -1,41 +1,49 @@
+
+import logging
 import os
+import time
 
 import pytest
-import logging
+
 import yaml
+
 from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
-import time
+
 
 # 设置日志记录
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 # 获取当前文件的目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # 构建到项目根目录的路径
-project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
+project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 
 # 构建配置文件的完整路径
-config_path = os.path.join(project_root, 'config', 'config.yaml')
+config_path = os.path.join(project_root, "config", "config.yaml")
 # 加载配置
-with open(config_path, 'r') as config_file:
+with open(config_path, "r") as config_file:
     config = yaml.safe_load(config_file)
+
 
 @pytest.fixture(scope="module")
 def browser():
     logger.info("Setting up browser")
-    chrome_profile_path = config['browser']['chrome_profile_path']
+    chrome_profile_path = config["browser"]["chrome_profile_path"]
     browser = BrowserControl(profile_path=chrome_profile_path)
     yield browser
     logger.info("Tearing down browser")
     browser.close()
 
+
 @pytest.fixture(scope="module")
 def fnbi_app():
     logger.info("Setting up FNBI application")
-    fnbi_executable = config['fnbi']['executable_path']
+    fnbi_executable = config["fnbi"]["executable_path"]
     app = FNBIApp(fnbi_executable)
     app_was_running = app.is_running()
 
@@ -54,6 +62,7 @@ def fnbi_app():
         assert not app.is_running(), "FNBI application failed to stop"
     else:
         logger.info("FNBI application was running before the test, leaving it running")
+
 
 @pytest.fixture(scope="module")
 def fnbi_service():
@@ -77,6 +86,7 @@ def fnbi_service():
     else:
         logger.info("FNBI service was running before the test, leaving it running")
 
+
 @pytest.mark.dependency()
 def test_system_setup(fnbi_app, fnbi_service):
     """
@@ -84,6 +94,7 @@ def test_system_setup(fnbi_app, fnbi_service):
     """
     assert fnbi_service.is_running(), "FNBI service is not running"
     assert fnbi_app.is_running(), "FNBI application is not running"
+
 
 @pytest.mark.dependency(depends=["test_system_setup"])
 def test_allowed_navigation(browser, fnbi_app, fnbi_service):
@@ -94,14 +105,19 @@ def test_allowed_navigation(browser, fnbi_app, fnbi_service):
     """
     logger.info("Starting test_allowed_navigation")
 
-    allowed_url = config['test']['allowed_url']
+    allowed_url = config["test"]["allowed_url"]
     browser.navigate_to(allowed_url)
 
-    assert browser.is_page_loaded("Example Domain"), "Allowed page did not load correctly"
+    assert browser.is_page_loaded(
+        "Example Domain"
+    ), "Allowed page did not load correctly"
     assert browser.is_element_present("tag name", "body"), "Page body is missing"
-    assert not browser.is_element_present("id", "fnbi-block-page"), "FNBI block page was unexpectedly present"
+    assert not browser.is_element_present(
+        "id", "fnbi-block-page"
+    ), "FNBI block page was unexpectedly present"
 
     logger.info("test_allowed_navigation completed successfully")
+
 
 @pytest.mark.dependency(depends=["test_system_setup"])
 def test_allowed_navigation_after_block(browser, fnbi_app, fnbi_service):
@@ -110,17 +126,25 @@ def test_allowed_navigation_after_block(browser, fnbi_app, fnbi_service):
     """
     logger.info("Starting test_allowed_navigation_after_block")
 
-    blocked_url = config['test']['blocked_url']
+    blocked_url = config["test"]["blocked_url"]
     browser.navigate_to(blocked_url)
-    time.sleep(2)  # Wait for potential block page to load
+    WebDriverWait(browser.driver, 10).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
 
-    allowed_url = config['test']['allowed_url']
+    allowed_url = config["test"]["allowed_url"]
     browser.navigate_to(allowed_url)
 
-    assert browser.is_page_loaded("Example Domain"), "Allowed page did not load correctly after blocked page"
+    assert browser.is_page_loaded(
+        "Example Domain"
+    ), "Allowed page did not load correctly after blocked page"
     assert browser.is_element_present("tag name", "body"), "Page body is missing"
-    assert not browser.is_element_present("id", "fnbi-block-page"), "FNBI block page was unexpectedly present"
+    assert not browser.is_element_present(
+        "id", "fnbi-block-page"
+    ), "FNBI block page was unexpectedly present"
 
-    logger.info("test_allowed_navigation_after_block completed successfully")
+CASES = [c for c in load_test_cases() if c['verdict'] == 'allow']
+
 
 # Add more test cases as needed
+

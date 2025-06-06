@@ -1,7 +1,9 @@
 import pytest
+
+from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
-from src.browser_control import BrowserControl
+
 
 class TestUserAppServiceCommunication:
 
@@ -11,15 +13,21 @@ class TestUserAppServiceCommunication:
         """
         # Start the service (no.1)
         fnbi_service.start()
-        assert fnbi_app.is_connected_to_service(), "App failed to connect to service on first start"
+        assert (
+            fnbi_app.is_connected_to_service()
+        ), "App failed to connect to service on first start"
 
         # Stop the service
         fnbi_service.stop()
-        assert not fnbi_app.is_connected_to_service(), "App still connected after service stop"
+        assert (
+            not fnbi_app.is_connected_to_service()
+        ), "App still connected after service stop"
 
         # Start the service (no.2)
         fnbi_service.start()
-        assert fnbi_app.is_connected_to_service(), "App failed to reconnect to service on second start"
+        assert (
+            fnbi_app.is_connected_to_service()
+        ), "App failed to reconnect to service on second start"
 
     def test_service_port_detection(self, fnbi_app, fnbi_service, port_occupier):
         """
@@ -27,7 +35,9 @@ class TestUserAppServiceCommunication:
         """
         # Start the service
         fnbi_service.start()
-        assert fnbi_app.is_connected_to_service(), "App failed to connect to service on first start"
+        assert (
+            fnbi_app.is_connected_to_service()
+        ), "App failed to connect to service on first start"
 
         # Stop the service
         fnbi_service.stop()
@@ -38,7 +48,9 @@ class TestUserAppServiceCommunication:
 
         # Start the service again
         fnbi_service.start()
-        assert fnbi_app.is_connected_to_service(), "App failed to connect to service on second start with different port"
+        assert (
+            fnbi_app.is_connected_to_service()
+        ), "App failed to connect to service on second start with different port"
 
     def test_proxy_message_exchange(self, fnbi_app, fnbi_service, config):
         """
@@ -46,13 +58,17 @@ class TestUserAppServiceCommunication:
         """
         config.reset_fpx_addr_json()
         config.setup_proxy()
-        
+
         fnbi_service.start()
         fnbi_app.start()
 
-        assert fnbi_app.get_fpx_addr() == config.get_expected_fpx_addr(), "FPX address not correctly inferred from proxy config"
+        assert (
+            fnbi_app.get_fpx_addr() == config.get_expected_fpx_addr()
+        ), "FPX address not correctly inferred from proxy config"
 
-    def test_isolate_request_isolator_not_running(self, fnbi_app, fnbi_service, browser_control):
+    def test_isolate_request_isolator_not_running(
+        self, fnbi_app, fnbi_service, browser_control
+    ):
         """
         Test case 3.1.4: Isolate request is handled when isolator is not running
         """
@@ -63,10 +79,16 @@ class TestUserAppServiceCommunication:
         browser_control.navigate_to_isolated_page()
 
         assert fnbi_app.is_isolator_running(), "Isolator did not start automatically"
-        assert browser_control.is_showing_interception_page(), "Original browser not showing interception page"
-        assert browser_control.is_isolated_page_visible(), "Isolated page not visible in browser"
+        assert (
+            browser_control.is_showing_interception_page()
+        ), "Original browser not showing interception page"
+        assert (
+            browser_control.is_isolated_page_visible()
+        ), "Isolated page not visible in browser"
 
-    def test_isolate_request_isolator_running(self, fnbi_app, fnbi_service, browser_control):
+    def test_isolate_request_isolator_running(
+        self, fnbi_app, fnbi_service, browser_control
+    ):
         """
         Test case 3.1.5: Isolate request is handled when isolator is running
         """
@@ -76,7 +98,12 @@ class TestUserAppServiceCommunication:
 
         browser_control.navigate_to_isolated_page()
 
-        assert browser_control.is_request_in_isolated_browser(), "Request not shown in isolated browser"
-        assert browser_control.is_showing_interception_page(), "Original browser not showing interception page"
+        assert (
+            browser_control.is_request_in_isolated_browser()
+        ), "Request not shown in isolated browser"
+        assert (
+            browser_control.is_showing_interception_page()
+        ), "Original browser not showing interception page"
+
 
 # Add more test methods as needed

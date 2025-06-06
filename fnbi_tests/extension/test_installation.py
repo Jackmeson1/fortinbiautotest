@@ -1,6 +1,9 @@
 import os
+
 import pytest
-from src.utils import is_process_running, check_file_exists, read_config
+
+from src.utils import check_file_exists, is_process_running, read_config
+
 
 def test_extension_installation(browser, fnbi_service):
     # Ensure FNBI service is running
@@ -12,7 +15,9 @@ def test_extension_installation(browser, fnbi_service):
     browser.navigate_to(config["test"]["allowed_url"])
 
     # Check if the extension process is running
-    assert is_process_running("chrome_extension.exe"), "Extension process is not running"
+    assert is_process_running(
+        "chrome_extension.exe"
+    ), "Extension process is not running"
 
     # Check if extension files are present in the expected location
     extension_dir = os.path.join(
@@ -22,5 +27,3 @@ def test_extension_installation(browser, fnbi_service):
         "<extension_id>",
     )
     assert check_file_exists(extension_dir), "Extension files are not present"
-
-
