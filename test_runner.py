@@ -11,10 +11,11 @@ if __name__ == "__main__":
     print("SSH Output:", output)
 
     # Check if a process is running and start it if not
-    if not FortiNBIManager.is_process_running("FortiNBI.exe"):
-        FortiNBIManager.start_process(
-            r"C:\Program Files (x86)\Fortinet\FortiNBI\FortiNBI.exe"
-        )
+
+    proc = None
+    if not FortiNBIManager.is_process_running('FortiNBI.exe'):
+        proc = FortiNBIManager.start_process(r'C:\Program Files (x86)\Fortinet\FortiNBI\FortiNBI.exe')
+
 
     # Create test suite
     suite = unittest.TestSuite()
@@ -24,3 +25,6 @@ if __name__ == "__main__":
 
     # Run the test suite
     unittest.TextTestRunner().run(suite)
+
+    if proc:
+        FortiNBIManager.stop_process(proc)
