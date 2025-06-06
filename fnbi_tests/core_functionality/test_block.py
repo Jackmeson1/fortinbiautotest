@@ -2,6 +2,7 @@ import os
 import pytest
 import logging
 import yaml
+from urllib.parse import urlparse
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -107,6 +108,10 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
 
         try:
             current_url = browser.driver.current_url
+            parsed = urlparse(current_url)
+            assert parsed.scheme == 'extension', f"Unexpected scheme: {current_url}"
+            assert parsed.path.endswith('gatewayPage.html'), f"Unexpected path: {current_url}"
+            assert 'Policy' in browser.driver.page_source
         except WebDriverException as e:
             print(f"\nExpected WebDriver Error: {str(e)}")
             if 'target frame detached' in str(e):
