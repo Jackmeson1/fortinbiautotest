@@ -14,5 +14,7 @@ def test_extension_capp_communication(browser, fnbi_service, fnbi_app):
     # Check if the communication port is open
     assert wait_for_port(5000, timeout=30), "Communication port is not open"
 
+
     # Additional sanity check that the page loaded
     assert browser.is_page_loaded("Example Domain")
+

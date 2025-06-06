@@ -1,3 +1,4 @@
+
 from src.browser_control import BrowserControl
 from src.utils import read_config
 
@@ -10,4 +11,5 @@ def test_navigation_works():
         assert browser.is_page_loaded("Example Domain")
     finally:
         browser.close()
+
 

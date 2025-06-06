@@ -23,3 +23,4 @@ def test_extension_installation(browser, fnbi_service):
     )
     assert check_file_exists(extension_dir), "Extension files are not present"
 
+

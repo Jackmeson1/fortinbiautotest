@@ -1,3 +1,4 @@
+
 import pytest
 import sys
 from src.utils import read_config
@@ -7,4 +8,5 @@ from src.utils import read_config
 def test_executable_path_points_to_windows_binary():
     config = read_config("config/config.yaml")
     assert config["fnbi"]["executable_path"].endswith("FortiNBI.exe")
+
 

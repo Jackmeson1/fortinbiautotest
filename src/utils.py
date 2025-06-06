@@ -44,11 +44,19 @@ from PIL import Image
 from io import BytesIO
 from skimage.metrics import structural_similarity as ssim
 import numpy as np
-import pygetwindow as gw
-import win32gui
-import win32ui
-import win32con
-import win32api
+
+try:  # Optional Windows-specific dependencies
+    import pygetwindow as gw
+    import win32gui
+    import win32ui
+    import win32con
+    import win32api
+except Exception:  # pragma: no cover - non-Windows environment
+    gw = None
+    win32gui = None
+    win32ui = None
+    win32con = None
+    win32api = None
 
 
 import ctypes
@@ -63,6 +71,9 @@ def take_window_screenshot(window_title, save_dir, function_type):
     :param function_type: 功能类型（block, freeze, allow）
     :return: 保存的截图路径
     """
+    if gw is None or win32gui is None:
+        raise RuntimeError("Window screenshot functionality requires Windows dependencies")
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{function_type}_{timestamp}.png"
     save_path = os.path.join(save_dir, filename)
@@ -123,6 +134,22 @@ def take_window_screenshot(window_title, save_dir, function_type):
         logging.error(f"Failed to take window screenshot: {e}")
         raise
     return save_path
+
+
+def compare_images_ssim(reference_path, screenshot_path):
+    """Compare two images and return their SSIM similarity score."""
+    ref_img = Image.open(reference_path).convert("L")
+    scr_img = Image.open(screenshot_path).convert("L")
+
+    ref_arr = np.array(ref_img)
+    scr_arr = np.array(scr_img)
+
+    if ref_arr.shape != scr_arr.shape:
+        scr_img = scr_img.resize(ref_img.size)
+        scr_arr = np.array(scr_img)
+
+    score = ssim(ref_arr, scr_arr)
+    return float(score)
 
 
 import os
