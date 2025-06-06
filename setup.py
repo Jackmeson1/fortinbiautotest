@@ -10,6 +10,8 @@ setup(
         "pywinauto",
         "psutil",
         "PyYAML",
+        "open-clip-torch",
+        "faiss-cpu",
     ],
     entry_points={
         "console_scripts": [
