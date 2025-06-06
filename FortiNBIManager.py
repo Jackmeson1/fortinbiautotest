@@ -1,4 +1,5 @@
 import subprocess
+
 import psutil
 
 
@@ -10,9 +11,9 @@ class FortiNBIManager:
             # 遍历所有的运行中的进程
             for proc in psutil.process_iter():
                 # 获取进程详情作为字典
-                process_info = proc.as_dict(attrs=['pid', 'name', 'create_time'])
+                process_info = proc.as_dict(attrs=["pid", "name", "create_time"])
                 # 检查进程名是否匹配
-                if process_name.lower() in process_info['name'].lower():
+                if process_name.lower() in process_info["name"].lower():
                     return True
             return False
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
@@ -23,13 +24,13 @@ class FortiNBIManager:
         subprocess.Popen(path_to_exe)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     manager = FortiNBIManager()
 
     # 替换成你的 FortiNBI.exe 的完整路径
     path_to_forti_nbi = r"C:\Program Files (x86)\Fortinet\FortiNBI\FortiNBI.exe"
 
-    if not manager.is_process_running('FortiNBI.exe'):
+    if not manager.is_process_running("FortiNBI.exe"):
         print("FortiNBI.exe is not running. Starting it now...")
         manager.start_process(path_to_forti_nbi)
     else:

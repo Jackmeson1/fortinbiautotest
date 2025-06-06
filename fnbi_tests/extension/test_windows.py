@@ -1,9 +1,9 @@
-
-import sys
 import subprocess
+import sys
 import time
 
 import pytest
+
 from src.utils import is_process_running
 
 
@@ -16,5 +16,3 @@ def test_notepad_can_launch():
         assert is_process_running("notepad.exe")
     finally:
         proc.terminate()
-
-

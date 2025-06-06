@@ -1,7 +1,8 @@
-import unittest
 import time
-from selenium import webdriver
+import unittest
+
 import psutil  # You'll need to install this package: pip install psutil
+from selenium import webdriver
 
 
 class TestBrowserIsolation(unittest.TestCase):
@@ -9,8 +10,10 @@ class TestBrowserIsolation(unittest.TestCase):
         """Initialize WebDriver before each test case."""
         option = webdriver.ChromeOptions()
 
-        option.add_argument(r'--user-data-dir=' + r'C:\Users\test\AppData\Local\Google\Chrome\User Data')
-        option.add_argument(r'--profile-directory=Profile 3')
+        option.add_argument(
+            r"--user-data-dir=" + r"C:\Users\test\AppData\Local\Google\Chrome\User Data"
+        )
+        option.add_argument(r"--profile-directory=Profile 3")
         self.driver = webdriver.Chrome(options=option)
 
     def tearDown(self):
@@ -33,9 +36,9 @@ class TestBrowserIsolation(unittest.TestCase):
             # Assert if an RDP process exists in Windows processes
             rdp_exist = False
 
-            for proc in psutil.process_iter(['name']):
-                print(proc.info['name'].lower())
-                if 'rdp' in proc.info['name'].lower():
+            for proc in psutil.process_iter(["name"]):
+                print(proc.info["name"].lower())
+                if "rdp" in proc.info["name"].lower():
                     rdp_exist = True
                     break
 
@@ -46,5 +49,5 @@ class TestBrowserIsolation(unittest.TestCase):
             self.fail(f"Test failed due to {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

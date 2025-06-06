@@ -1,5 +1,6 @@
 _license_active = False
 
+
 def send_alive_request():
     """Placeholder for sending an alive request to the extension."""
     return {"status": "ok"}

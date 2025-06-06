@@ -1,4 +1,5 @@
 import time
+
 import pytest
 
 from src.fnbi_service import FNBIService
@@ -26,6 +27,8 @@ def test_extension_installation_trigger(browser, process_name):
             if is_process_running(process_name):
                 break
             time.sleep(1)
-        assert is_process_running(process_name), f"{browser} extension was not installed"
+        assert is_process_running(
+            process_name
+        ), f"{browser} extension was not installed"
     finally:
         service.stop()

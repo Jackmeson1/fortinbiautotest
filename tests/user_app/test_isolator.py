@@ -1,4 +1,5 @@
 import pytest
+
 from src.fnbi_app import FNBIApp
 
 
