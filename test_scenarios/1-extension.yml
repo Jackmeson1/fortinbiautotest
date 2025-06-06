@@ -1,0 +1,793 @@
+1.1:
+    NAME: INSTALLATION
+
+    1.1.1:
+        NAME: CHROME
+
+        1.1.1.1:
+            NAME: Extension installs
+            TEST: set extension id in force install list. Restart chrome
+            EXPECTED: extension is installed
+            RESULT:
+
+        1.1.1.2:
+            NAME: Extension uninstalls
+            TEST: remove extension id from force install list. Restart chrome.
+            EXPECTED: the extension is removed
+            RESULT:
+
+    1.1.2:
+        NAME: FIREFOX
+
+        1.1.2.1:
+            NAME: Extension detects if webRequest permission is not enabled
+            TEST: Install system. Start FF. Go to "about:addons" page in FF and enter the details of the extension. 
+                  goto permissions tab and ensure that "Access your data for all websites" is not selected.
+                  Wait 15m, then try to navigate.
+            EXPECTED: A permission required page is shown
+            RESULT:
+
+        1.1.2.2:
+            NAME: Extension does not spam permission required page
+            TEST: Install system. Start FF. Go to "about:addons" page in FF and enter the details of the extension. 
+                  goto permissions tab and ensure that "Access your data for all websites" is not selected.
+                  Continue using the browser for the next 16m
+            EXPECTED: The permission required page is not shown more often than ever 15m.
+            RESULT:
+    1.1.3:
+        NAME: EDGE
+
+
+        1.1.3.1:
+            NAME: Extension installs
+            TEST: set extension id in force install list. Restart chrome
+            EXPECTED: extension is installed
+            RESULT:
+
+        1.1.3.2:
+            NAME: Extension uninstalls
+            TEST: remove extension id from force install list. Restart chrome.
+            EXPECTED: the extension is removed
+            RESULT:
+    1.1.4:
+        NAME: COMMON
+
+
+1.2:
+    NAME: EXTENSION - SYSTEM COMMUNICATION
+
+    1.2.1:
+        NAME: EXTENSION - CAPP
+
+        1.2.1.1:
+            NAME: Navigation without CAPP
+            TEST: Try to navigate without companion app running
+            EXPECTED: a block screen is shown explaining that the system appears not to be running
+            RESULT:
+
+        1.2.1.2:
+            NAME: Navigation when extension starts before CAPP
+            TEST: With chrome opened, start the companion app. Try to navigate
+            EXPECTED: The extension immediately finds the companion app. Navigation proceeds
+            RESULT:
+
+        1.2.1.3:
+            NAME: Navigation when CAPP starts before extension
+            TEST: With the companion app running, start chrome. Try to navigate
+            EXPECTED: The extension immediately finds the companion app. Navigation proceeds
+            RESULT:
+
+        1.2.1.4:
+            NAME: Isolate when User App is not running
+            TEST:
+                With the User App (GUI) stopped; service running. Try to navigate to isolated page
+            EXPECTED:
+                navigation proceeds with action == isolation fallback (default freeze)
+            RESULT:
+
+        1.2.1.5:
+            NAME: Isolate when Isolator is not running
+            TEST: 
+                With the User App (GUI) running; isolator stopped; service running. Try to navigate to isolated page
+            EXPECTED: 
+                The Isolator automatically starts. After Isolator starts, the isolation page is displayed. No freeze mechanism is triggered.
+            RESULT:
+
+        1.2.1.6:
+            NAME: Gateway request handling
+            TEST: With chrome running, User App running, FPX running, service stopped.
+                Try to navigate to allowed page. Wait 5s. Start service
+            EXPECTED:
+                Request is first redirected to gateway page. After service starts, the request is redirected to
+                the original destination and allowed
+            RESULT:
+
+        1.2.1.7:
+            NAME: Service can be found on different ports
+            TEST: With all systems running but chrome. Start chrome (ex.1). stop service. start service so that it runs
+                on a different, valid port (ex.2).
+            EXPECTED:
+                ex. 1,2. Extension finds service on either port
+            RESULT:
+
+        1.2.1.8:
+            NAME: Extension responds to alive request
+            TEST: With all systems running. Send alive_req to extension.
+            EXPECTED: extension responds with ok
+            RESULT:
+
+        1.2.1.9:
+            NAME: content rating request timeout handled
+            TEST: With all systems running. navigate to page that causes service to timeout
+            EXPECTED: request rating falls back to block
+            RESULT:
+
+        1.2.1.10:
+            NAME: content rating request intelligeble response handled
+            TEST:
+                With all systems running. navigate to page that causes service to respond with unintelligible
+                response.
+
+            EXPECTED: request rating falls back to block
+            RESULT:
+
+        1.2.1.11:
+            NAME: content rating request error response handled
+            TEST:
+                With all systems running. navigate to page that causes service to respond with error
+                response.
+
+            EXPECTED: request rating falls back to block
+            RESULT:
+
+        1.2.1.12:
+            NAME: content rating request serivce crash handled
+            TEST: With all systems running. navigate to page that causes service to crash
+            EXPECTED: request rating falls back to block
+            RESULT:
+
+    1.2.2:
+        NAME: EXTENSION - CAPP - FPX
+
+        1.2.2.1:
+            NAME: Navigation without connection to FPX
+            TEST: start companion app and chrome with FPX stopped. Try to navigate
+            EXPECTED: navigation is blocked with timeout or cannot communicate to server error
+            RESULT:
+
+        1.2.2.2:
+            NAME: Navigation when CAPP starts before FPX
+            TEST: with CAPP and chrome running; FPX stopped. start the fpx. try to navigate
+            EXPECTED: navigation proceeds
+            RESULT:
+
+        1.2.2.3:
+            NAME: Navigation when FPX disconnects
+            TEST: with CAPP, chrome and FPX running. Stop the FPX. Try to navigate
+            EXPECTED: navigation is blocked with timeout or cannot communicate to server error
+            RESULT:
+
+        1.2.2.4:
+            NAME: Navigation when FPX disconnects, then immediately reconnects
+            TEST: with CAPP, chrome and FPX running. Stop the FPX. Start the FPX. Try to navigate
+            EXPECTED: navigation proceeds
+            RESULT:
+
+        1.2.2.5:
+            NAME: Navigation when FPX disconnects, navigation occurs, then FPX reconnects and navigation occurs again
+            TEST: with CAPP, chrome and FPX running. Stop the FPX. Try to navigate. Start the FPX. Try to navigate
+            EXPECTED: first navigation fails. Second navigation proceeds
+            RESULT:
+
+1.3:
+    NAME: WEB NAVIGATION
+
+    1.3.1:
+        NAME: MAIN FRAME
+
+        1.3.1.1:
+            NAME: Unfreeze in main frame
+            TEST: With all systems running. Perform FREEZE navigation. Click UNFREEZE
+            EXPECTED: Page is reloaded. Navigation is ALLOWED. Page loads as it would without FNBI
+            RESULT:
+
+    1.3.2:
+        NAME: SUB-FRAME
+
+        1.3.2.1:
+            NAME: Unfreeze in sub frame
+            TEST: With all systems running. Perform FREEZE navigation. Click UNFREEZE
+            EXPECTED: Whole page gets reloaded. Navigation is ALLOWED. Page loads as it would without FNBI
+            RESULT:
+
+
+    1.3.3:
+        NAME: MAIN-FRAME / SUB-FRAME COMMON
+
+        1.3.3.1:
+            NAME: Allowed navigation
+            TEST: with all systems running. Perform ALLOWED navigation
+            EXPECTED: Navigation is ALLOWED. Page loads as it would without FNBI
+            RESULT:
+
+        1.3.3.2:
+            NAME: Blocked navigation
+            TEST: With all systems running. Perform BLOCKED navigation
+            EXPECTED: Navigation is blocked and an intercept page is shown
+            RESULT:
+
+        1.3.3.3:
+            NAME: Freeze navigation
+            TEST: With all systems running. Perform FREEZE navigation
+            EXPECTED: Navigation is FROZEN. No JS is loaded. Forms, buttons and links are disabled.
+                Freeze banner is shown clearly. If unfreeze is enabled, freeze button is shown, else it is not
+            RESULT:
+
+        1.3.3.4:
+            NAME: Isolate navigation
+            TEST: With all systems running. Perform ISOLATE navigation
+            EXPECTED: In normal Chrome, the navigation is shown an intercept page explaining that the request will
+                be isolated. The navigation loads normally on the isolated browser
+            RESULT:
+
+        1.3.3.5:
+            NAME: System clears browser cache
+            TEST: Navigate to page that is known to use the local cache. Install extension. Try to navigate.
+            EXPECTED: The page is not loaded from cache and is instead requested from server
+            RESULT:
+
+    1.3.4:
+        NAME: HTTP HEADERS
+
+
+        1.3.4.1:
+            NAME: COOKIES
+
+            1.3.4.1.1:
+                NAME: Shopping cart session cookies are sent after hold/release redirection
+                TEST: With all systems running. Visit e-commerce page. Add items to cart. restart browser.
+                EXPECTED: Shopping cart session still shows as active. All selected items are found
+                RESULT:
+
+            1.3.4.1.2:
+                NAME: Website with customizable settings
+                TEST:
+                    With all systems running. Navigate to website that offers personalization
+                    (e.g. dark/light mode, etc) Change the settings. Navigate. Restart the browser
+                EXPECTED: Settings have persisted
+                RESULT:
+
+        1.3.4.2:
+            NAME: CORS
+
+            1.3.4.2.1:
+                NAME:
+                    Fortinet token header(x-fortinet-browser-protection) is not allowed in access-control-allow-headers response
+                TEST: With all systems running. Load page that that loads a cross-origin resource. The cross-origin resource
+                    responds with access-control-allow-headers that do not include the Fortinet token header
+                EXPECTED: The fortinet token header is still sent
+                RESULT:
+
+            1.3.4.2.2:
+                NAME: Origin and referer headers haven't changed after holding request
+                TEST: With all systems running. Load page that that loads a cross-origin resource.
+                EXPECTED: Origin and referer headers show the original values before the redirect
+                RESULT:
+        1.3.5:
+            NAME: CSP
+
+            1.3.5.1:
+                NAME: if response has no form-action no form-action is added
+                TEST: navigate to a page that doesn't set the form-action CSP directive
+                EXPECTED: the extension did not add form-action directive to the response
+                RESULT:
+
+            1.3.5.2:
+                NAME: if response has form-action with source of '*' the directive is not modified
+                TEST: navigate to a page that sets the form- action to '*'
+                EXPECTED: form-action is not modified
+                RESULT:
+
+            1.3.5.3:
+                NAME: if response has form-action with source of 'self' the CAPP hostname is added to the directive
+                TEST: navigate to a page that sets the form- action to 'self'
+                EXPECTED: The CAPP hostname is added to the directive
+                RESULT:
+
+
+            1.3.5.4:
+                NAME: if response has form-action with source of 'self' the CAPP hostname is added to the directive
+                TEST: navigate to a page that sets the form- action to 'self'
+                EXPECTED: The CAPP hostname is added to the directive
+                RESULT:
+
+            1.3.5.5:
+                NAME: if response has more than one form-action with source of 'self' the CAPP hostname is 
+                        added to every directive
+                TEST: navigate to a page that sets the form- action to 'self' twice in the same CSP header, 
+                        and once in a second CSP header
+                EXPECTED: The CAPP hostname is added to every directive
+                RESULT:
+
+            1.3.5.6:
+                NAME: if response contains a form-action directive with source set to a domain, the CAPP hostname is 
+                        added
+                TEST: navigate to a page that sets the form- action to an URL
+                EXPECTED: The CAPP hostname is added to a form-action directive in a new CSP header
+                RESULT:
+
+            1.3.5.7:
+                NAME: if response contains more than one form-action directive with source set to a domain, the 
+                        CAPP hostname is added only once
+                TEST: navigate to a page that sets the form-action to an URL twice in the same header and once more in 
+                        another CSP header
+                EXPECTED: The CAPP hostname is added to a form-action directive in a new CSP header
+                RESULT:
+
+            1.3.5.8:
+                NAME: if response contains a form-action with source of "'self' <some url" the CAPP hostname is only
+                        added to the same directive and no new CSP header is added
+                TEST: navigate to a page that sets the form-action to "'self' <url>"
+                EXPECTED: The CAPP hostname is added to the same directive. No new CSP header is added
+                RESULT:
+
+            1.3.5.9:
+                NAME: if response has form-action with source of '*' and 'self' CAPP hostname is added
+                TEST: navigate to a page that sets the form-action to '*' 'self'
+                EXPECTED: CAPP hostname is added to directive
+                RESULT:
+
+            1.3.5.10:
+                NAME: if response has form-action with source of '*' and <url> CAPP hostname is added
+                TEST: navigate to a page that sets the form-action to '*' <url>
+                EXPECTED: CAPP hostname is added to directive
+                RESULT:
+
+            1.3.5.11:
+                NAME: sub-frames can load when frame-src is specified
+                TEST: Navigate to page that sets frame-src to 'self'. The webpage should contain an iframe
+                EXPECTED: iframe page loads correctly
+                RESUT:
+
+    1.3.5:
+        NAME: AUTHENTICATION
+
+        1.3.5.1:
+            NAME: 3RD PARTY AND OAUTH AUTHENTICATION
+
+            1.3.5.1.1:
+                NAME: Gmail authentication
+                TEST: Navigate to https://www.google.com/gmail/about/. Log in
+                EXPECTED: You are grated access to the gmail inbox
+                RESULT:
+
+            1.3.5.1.2:
+                NAME: Google OAuth in trip advisor
+                TEST: Navigate to https://www.tripadvisor.com/. click sign in, choose google. sign in.
+                    Navigate to profile page at https://www.tripadvisor.com/Profile/<PROFILE NAME HERE>
+                EXPECTED: access is granted to profile page
+                RESULT:
+
+            1.3.5.1.3:
+                NAME: Facebook authentication
+                TEST: Navigate to https://www.facebook.com/; log in; navigate to profile page
+                    https://www.facebook.com/<PROFILE NAME HERE>
+                EXPECTED: access is granted to profile page
+                RESULT:
+
+            1.3.5.1.4:
+                NAME: Facebook OAuth
+                TEST: Navigate to https://www.tripadvisor.com/. click sign in, choose facebook. sign in.
+                    Navigate to profile page at https://www.tripadvisor.com/Profile/<PROFILE NAME HERE>
+                EXPECTED: access is granted to profile page
+                RESULT:
+
+            1.3.5.1.5:
+                NAME: Github authentication
+                TEST: Navigate to https://github.com/; log in; navigate to profile page
+                    https://github.com/stack<PROFILE NAME HERE>
+                EXPECTED: access is granted to profile page
+                RESULT:
+
+            1.3.5.1.6:
+                NAME: GitHub OAuth
+                TEST: Navigate to https://stackoverflow.com/. click sign in, choose github. sign in.
+                    Navigate to profile page
+                EXPECTED: access is granted to profile page
+                RESULT:
+
+
+        1.3.5.2:
+            NAME: FORTINET AUTHENTICATION
+
+            1.3.5.2.2:
+                NAME: Authentication portal
+                TEST: Navigate to Ftnt ReviewBoard. Enter credentials. Accept token in FortiToken.
+                EXPECTED: Can access
+                RESULT:
+
+    1.3.6:
+        NAME: SPECIAL CASES
+
+        1.3.6.1:
+            NAME: Google maps
+            TEST: Navigate to google maps.
+            EXPECTED: Page works as if the system was not installed
+            RESULT:
+
+    1.3.7:
+        NAME: License full handling
+
+        1.3.7.1:
+            NAME: Extension activates rating by default
+            TEST: With CAPP not running, extension installed, try to navigate
+            EXPECTED: Request is blocked
+            RESULT:
+
+        1.3.7.2:
+            NAME: If license is not full rating is active
+            TEST: With CAPP, FPX running, extension installed, try to navigate to page that is blocked
+            EXPECTED: Request is blocked
+            RESULT:
+
+
+        1.3.7.3:
+            NAME: If license is full rating is not active
+            TEST: With CAPP, FPX running, extension installed, license full, try to navigate to page that is blocked
+            EXPECTED: Request is allowed
+            RESULT:
+
+        1.3.7.4:
+            NAME: Rating is reactivated if license is now not full
+            TEST: With CAPP, FPX running, extension installed, license full, try to navigate to page that is blocked
+                  (no.1). Then make license not full. Wait at least 1m. Navigate to page that is blocked (no.2)
+            EXPECTED: (no.1) Request is allowed, (no.2) request is blocked
+            RESULT:
+
+        1.3.7.5:
+            NAME: Rating is deactivated if license is now full
+            TEST: With CAPP, FPX running, extension installed, license not full, try to navigate to page that is blocked
+                  (no.1). Then make license full. Navigate to page that is blocked (no.2)
+            EXPECTED: (no.1) Request is blocked, (no.2) request is allowed
+            RESULT:
+
+    1.3.8:
+        NAME: DOWNLOADS
+
+        1.3.8.1:
+            NAME: Anchor tag (<a>) download, no target attribute, not connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is allowed. Click the download anchor.
+            EXPECTED: The download is allowed. Page doesn't change
+            RESULT:
+
+        1.3.8.2:
+            NAME: Anchor tag (<a>) download, no target attribute, not connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is blocked. Click the download anchor.
+            EXPECTED: The download is blocked. Block notification is shown (not implemented Dec 2022)
+            RESULT:
+
+        1.3.8.3:
+            NAME: Anchor tag (<a>) download, no target attribute, connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download.  Ensure download URL is
+                allowed. Click the download anchor.
+            EXPECTED: The download is allowed. Page doesn't change
+            RESULT:
+
+        1.3.8.4:
+            NAME: Anchor tag (<a>) download, no target attribute, connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Ensure download URL is
+                blocked. Click the download anchor.
+            EXPECTED: The download is blocked. Block notification is shown (not implemented Dec 2022)
+            RESULT:
+
+        1.3.8.5:
+            NAME: Anchor tag (<a>) download, target="_blank", not connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is allowed. Click the download anchor.
+            EXPECTED: The download is allowed. FNBI download page is shown in new tab
+            RESULT:
+
+        1.3.8.6:
+            NAME: Anchor tag (<a>) download, target="_blank", not connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is blocked. Click the download anchor.
+            EXPECTED: The download is blocked. Block page is shown in new tab
+            RESULT:
+
+        1.3.8.7:
+            NAME: Anchor tag (<a>) download, target="_blank", connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download.  Ensure download URL is
+                allowed. Click the download anchor.
+            EXPECTED: The download is allowed. FNBI download page is shown in new tab
+            RESULT:
+
+        1.3.8.8:
+            NAME: Anchor tag (<a>) download, right-click > open in new tab, connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Ensure download URL is
+                blocked. Right-Click the download anchor, click open in new tab
+            EXPECTED: The download is blocked. Block page is shown in new tab
+            RESULT:
+
+        1.3.8.9:
+            NAME: Anchor tag (<a>) download, right-click > open in new tab, not connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is allowed. Right-Click the download anchor, click open in new tab
+            EXPECTED: The download is allowed. FNBI download page is shown in new tab
+            RESULT:
+
+        1.3.8.10:
+            NAME: Anchor tag (<a>) download, right-click > open in new tab, not connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is blocked. Right-Click the download anchor, click open in new tab
+            EXPECTED: The download is blocked. Block page is shown in new tab
+            RESULT:
+
+        1.3.8.11:
+            NAME: Anchor tag (<a>) download, right-click > open in new tab, connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download.  Ensure download URL is
+                allowed. Right-Click the download anchor, click open in new tab.
+            EXPECTED: The download is allowed. FNBI download page is shown in new tab
+            RESULT:
+
+        1.3.8.12:
+            NAME: Anchor tag (<a>) download, right-click > save link as, connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Ensure download URL is
+                blocked. Click the download anchor.
+            EXPECTED: The download is blocked. Block page is shown in new tab
+            RESULT:
+
+        1.3.8.13:
+            NAME: Anchor tag (<a>) download, right-click > save link as, not connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is allowed. right-Click the download anchor, click save link as.
+            EXPECTED: The download is allowed. No navigation takes place
+            RESULT:
+
+        1.3.8.14:
+            NAME: Anchor tag (<a>) download, right-click > save link as, not connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is blocked. right-Click the download anchor, click save link as.
+            EXPECTED: The download is blocked. Block notification is shown (not implemented as of December 2022)
+            RESULT:
+
+        1.3.8.15:
+            NAME: Anchor tag (<a>) download, right-click > save link as, connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download.  Ensure download URL is
+                allowed. right-Click the download anchor, click save link as.
+            EXPECTED: The download is allowed. No navigation occurs
+            RESULT:
+
+        1.3.8.16:
+            NAME: Anchor tag (<a>) download, right-click > open in new tab, connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Ensure download URL is
+                blocked. right-Click the download anchor, click save link as.
+            EXPECTED: The download is blocked. Block notification is shown (not implemented as of December 2022)
+            RESULT:
+
+        1.3.8.17:
+            NAME: Address bar download, not connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is allowed. Enter download url in address bar
+            EXPECTED: The download is allowed. FNBI download page is shown
+            RESULT:
+
+        1.3.8.18:
+            NAME: Address bar download, not connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Turn off, then on the
+                ext-facing mock. Ensure download URL is blocked. Enter download url in address bar
+            EXPECTED: The download is blocked. Block page is shown
+            RESULT:
+
+        1.3.8.19:
+            NAME: Address bar download, connected, allowed download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download.  Ensure download URL is
+                allowed. Enter download url in address bar
+            EXPECTED: The download is allowed. FNBI download page is shown
+            RESULT:
+
+        1.3.8.20:
+            NAME: Address bar download, connected, block download
+            TEST: With ext-facing mock running, navigate to page with anchor tag download. Ensure download URL is
+                blocked. Enter download url in address bar
+            EXPECTED: The download is blocked. Block page is shown
+            RESULT:
+
+
+1.4:
+    NAME: RESOURCE REQUESTS
+
+    1.4.1:
+        NAME: RATED RESOURCE REQUESTS - Feature disabled as of Sept 2022
+
+        1.4.1.1:
+            NAME: Allowed resource
+            TEST: with all systems running. Navigate to page with ALLOWED resource
+            EXPECTED: resource is allowed to be fetched
+            RESULT:
+
+        1.4.1.2:
+            NAME: Blocked resource
+            TEST: With all systems running. Navigate to page with BLOCKED resource
+            EXPECTED: Resource is blocked
+            RESULT:
+
+        1.4.1.3:
+            NAME: Frozen resource
+            TEST: With all systems running. Navigate to page with FROZEN resource
+            EXPECTED: Resource is blocked
+            RESULT:
+
+        1.4.1.4:
+            NAME: Isolated resource
+            TEST: With all systems running. Navigate to page with ISOLATED resource
+            EXPECTED: Resource is blocked
+            RESULT:
+
+    1.4.2:
+        NAME: IGNORED RESOURCE REQUESTS
+
+        1.4.2.1:
+            NAME: PING resource request
+            TEST: From a page, send PING resource request
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.2:
+            NAME: CSP_REPORT resource request
+            TEST: From a page served with CSP report to header, violate CSP so CSP is triggered
+            EXPECTED: resource CSP_REPORT request succeeds
+            RESULT:
+
+        1.4.2.3:
+            NAME: WEBSOCKET resource request
+            TEST: From a page, send WEBSOCKET connection request
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.4:
+            NAME: XMLHTTPREQUEST resource request
+            TEST: From a page, send  resource XMLHTTPREQUEST request
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.5:
+            NAME: FONT resource request
+            TEST: Load a page that requires a FONT
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.6:
+            NAME: STYLESHEET resource request
+            TEST: Load a page that requires a STYLESHEET
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.7:
+            NAME: OBJECT resource request
+            TEST: Load a page that requires an OBJECT
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.8:
+            NAME: MEDIA resource request
+            TEST: Load a page with MEDIA
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.9:
+            NAME: IMAGE resource request
+            TEST: Load a page that contains an image
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.10:
+            NAME: SCRIPT resource request
+            TEST: Load a page with a script
+            EXPECTED: resource request succeeds
+            RESULT:
+
+        1.4.2.11:
+            NAME: Long running ignored requests succeed without user navigation
+            TEST: Navigate to a page that generates each of the ignored request types (see other test cases here) every
+                29s. Run test for 10m. Do not navigate
+            EXPECTED: Every resource request succeeds
+            RESULT:
+    1.4.3:
+        NAME: OTHER RESOURCE REQUESTS
+
+1.5:
+    NAME: WINDOWS
+    1.5.1:
+        NAME: NON-BROWSER-REQUESTS
+
+        1.5.1.1:
+            NAME: Taskbar news
+            TEST: Click on the taskbar news
+            EXPECTED: task bar news pop-up shows up. Not intercepted
+            RESULT:
+
+        1.5.1.2:
+            NAME: One drive log in
+            TEST: Search for one drive in menu, click it and log in as prompted.
+            EXPECTED: User can log in to one drive
+            RESULT:
+
+        1.5.1.3:
+            NAME: One drive machine to server sync
+            TEST: Add a file in the one drive in the file explorer. Log in to one drive in a browser. Wait for sync
+            EXPECTED: the file appears in the browser
+            RESULT:
+
+        1.5.1.4:
+            NAME: One drive server to machine sync
+            TEST: Add a file in onedrive in the browser. Wait for it to sync.
+            EXPECTED: The file shows in the onedrive in the file explorer
+            RESULT:
+
+        1.5.1.5:
+            NAME: Office 365 login
+            TEST: Install office in the machine. Try to log in
+            EXPECTED: User is able to log in to office
+            RESULT:
+
+        1.5.1.6:
+            NAME: Teams login
+            TEST: Install Teams. Log in
+            EXPECTED: User can log in without issues
+            RESULT:
+
+        1.5.1.7:
+            NAME: Teams send message.
+            TEST: In teams, send message to someone
+            EXPECTED: Message arrives
+            RESULT:
+
+        1.5.1.8:
+            NAME: Teams receive message
+            TEST: In teams, send message to account logged in within the machine
+            EXPECTED: The message is received
+            RESULT:
+
+        1.5.1.9:
+            NAME: Microsoft store log in
+            TEST: Log in to the microsoft store
+            EXPECTED: User can log in
+            RESULT:
+
+        1.5.1.10:
+            NAME: Microsoft store items can be installed
+            TEST: In msft store, try to install an item
+            EXPECTED: Item installs
+            RESULT:
+
+        1.5.1.11:
+            NAME: PIP packages can be installed
+            TEST: install pip in the machine. Ask pip to install a package
+            EXPECTED: pip package is installed
+            RESULT:
+
+        1.5.1.12:
+            NAME: installations with download work
+            TEST: Download node JS installer. Try to install.
+            EXPECTED: Node JS completes installation
+            RESULT:
+
+        1.5.1.13:
+            NAME: Whatsap logs in
+            TEST: Installl whatsap. log in
+            EXPECTED: User can log in into whatsapp
+            RESULT:
+
+        1.5.1.14:
+            NAME: Whatsap can send message
+            TEST: In whatsap send message to someone.
+            EXPECTED: User can receive message
+            RESULT:
+
+        1.5.1.15:
+            NAME: Whatsap can receive message
+            TEST: In whatsap, send message to user logged in the machine
+            EXPECTED: message is received
+            RESULT:

@@ -1,0 +1,971 @@
+3.1:
+  NAME: USER APP - SERVICE COMMUNICATION
+
+  3.1.1:
+    NAME: The app can reconnect to the service
+    TEST: Start the app, start the service (no.1), stop the service, start the service (no.2)
+    EXPECTED: no.1 - the app connects to the service. no.2 - the app also connects to the service
+    RESULT:
+
+
+  3.1.2:
+    NAME: User app can detect the service port given a range of ports
+    TEST: Start the service, start the user app (no.1). Stop the service. Start an app that will occupy the port
+      previously used by the service, start the service (no.2)
+    EXPECTED: no.1 - the app connects to the service. no.2 - the app also connects to the service
+    RESULT:
+
+  3.1.3:
+    NAME: proxy messages are correctly exchanged
+    TEST: with /res/misc/fpx_addr.json reset, with proxy setup in machine, start the user app, start the service
+    EXPECTED: the fpx addr label now shows the fpx addr inferred from the proxy config
+    RESULT:
+
+  3.1.4:
+    NAME: Isolate request is handled when isolator is not running
+    TEST: start the user app, start the service, manually stop the isolator, navigate to isolated page
+    EXPECTED: the isolator starts, the original browser shows the isolation interception page, the isolated page
+      shows in the browser
+    RESULT:
+
+  3.1.5:
+    NAME: Isolate request is handled when isolator is running
+    TEST: start the user app, start the service, wait for the isolator state to change to running, navigate to
+      isolated page
+    EXPECTED: the request is shown in isolated browser, an intercept page is shown to the user in the original
+      browser
+    RESULT:
+
+3.2:
+  NAME: GUI
+
+  3.2.1:
+    NAME: SERVICE
+    3.2.1.1:
+      NAME: Gui START SERVICE button is available when service is not running
+      TEST: Start the user app, stop service
+      EXPECTED: The start service button is shown
+      RESULT:
+
+    3.2.1.2:
+      NAME: Gui RESTART SERVICE button is enabled when service is running, or starting, or connecting
+      TEST: Start the user app, start the service
+      EXPECTED: The restart service button is shown
+      RESULT:
+
+    3.2.1.3:
+      NAME: Gui service state label shows stopped state when service is not running
+      TEST: Start the user app, stop service
+      EXPECTED: The service state label shows stopped
+      RESULT:
+
+    3.2.1.4:
+      NAME: Gui service state label shows stopped state when service is not running
+      TEST: Start the user app, stop service
+      EXPECTED: The service state label shows stopped
+      RESULT:
+
+    3.2.1.5:
+      NAME: Gui service state label shows starting when service is starting
+      TEST: start the user app, start the service
+      EXPECTED: While the service is starting the label shows starting state
+      RESULT:
+
+    3.2.1.6:
+      NAME: Gui service connection state label shows not connected when service is stopped
+      TEST: start the user app, stop the service
+      EXPECTED: the service connection state label shows not connected state
+      RESULT:
+
+    3.2.1.7:
+      NAME: Gui service connection state label shows not connected when service is starting
+      TEST: start the user app, stop the service, start the service
+      EXPECTED: the service connection state label shows not connected state while service is starting
+      RESULT:
+
+    3.2.1.8:
+      NAME: Gui service connection state label shows connected a few moments after service enters running state (<2s)
+      TEST: start the user app, start the service
+      EXPECTED: the service connection state label shows connected state within 2s of the service entering running state
+      RESULT:
+
+    3.2.1.10:
+      NAME: restart service button works
+      TEST: with the user app running and the service running, press the restart button
+      EXPECTED: the service restarts
+      RESULT:
+
+    3.2.1.11:
+      NAME: Start service button works
+      TEST: with the user app running and the service stopped, press the start button
+      EXPECTED: the service starts
+      RESULT:
+
+  3.2.2:
+    NAME: ISOLATOR
+
+    3.2.2.1:
+      NAME: INSTALLATION
+
+      3.2.2.1.1:
+        NAME: On user app start, installation is assessed
+        TEST: Start the user app
+        EXPECTED: the isolator state is assessed
+        RESULT:
+
+      3.3.2.1.2:
+        NAME: If isolator is not installed, assessment results in installation
+        TEST: With the isolator not installed, start the user app
+        EXPECTED: After assessment, installation starts
+        RESULT:
+
+      3.2.2.1.3:
+        NAME: On isolator installation start, the user is notified
+        TEST: With the isolator not installed, start the user app
+        EXPECTED: When installation starts, a notification is shown to the user
+        RESULT:
+
+      3.2.2.1.4:
+        NAME: Progress bar is shown during isolator installation
+        TEST: with the isolator not installed, start the user app
+        EXPECTED: When installation starts, a progress bar is shown to the user.
+        RESULT:
+
+      3.2.2.1.5:
+        NAME: On installation termination the progress bar is removed
+        TEST: With the isolator not installed, start the user app
+        EXPECTED: After isolator installation concludes, the progress bar is removed
+        RESULT:
+
+      3.2.2.1.6:
+        NAME: On installation termination, a notification is shown
+        TEST: With the isolator not installed, start the user app
+        EXPECTED: After isolator installation concludes the progress bar is removed
+        RESULT:
+
+      3.2.2.1.7:
+        NAME: On installation termination, the isolator starts
+        TEST: With the isolator not installed, start the user app
+        EXPECTED: Once installation finishes, the isolator starts
+        RESULT:
+
+      3.2.2.1.8:
+        NAME: On installation error, a notification is shown
+        TEST: With the isolator not installed, the fpx stopped. Start the user app
+        EXPECTED: During download stage an error message is shown to the user
+        RESULT:
+
+      3.2.2.1.9:
+        NAME: On installation error, the progress bar is removed
+        TEST: With the isolator not installed, the fpx stopped. Start the user app
+        EXPECTED: After error occurs, the progress bar is removed
+        RESULT:
+
+      3.2.2.1.10:
+        NAME: On installation error, the isolator state is stopped
+        TEST: With the isolator not installed, the fpx stopped. Start the user app
+        EXPECTED: After error occurs, the isolator state is stopped
+        RESULT:
+
+      3.2.2.1.11:
+        NAME: On isolator stop, the isolator state label changes to stopped
+        TEST: With the user app and isolator running, manually stop the isolator
+        EXPECTED: In the gui, the isolator state label shows stopped
+        RESULT:
+
+      3.2.2.1.12:
+        NAME: Isolator shows an appropriate message if there is a network error during isolator installation
+        TEST: Ensure isolator is not installed. Start FPX. Start Service. Start user User App.
+          When installation starts, stop the FPX
+        EXPECTED: An error message is shown to the user(~ isolator server connection error). Isolator goes to stopped state
+        RESULT:
+
+      3.2.2.1.13:
+        NAME: Isolator shows an appropriate message if there is a network error during isolator installation
+        TEST: Ensure isolator is not installed. Stop FPX. Start Service. Start user User App.
+        EXPECTED: An error message is shown to the user(~ Captive portal not available). Isolator goes to stopped state
+        RESULT:
+
+      3.2.2.1.14:
+        NAME: Isolator shows an appropriate message if there is a decompression error
+        TEST: Ensure isolator is not installed. Ensure compressed isolator image is corrupt. Start FPX.
+          Start Service. Start user User App.
+        EXPECTED: An error message is shown to the user. Isolator goes to stopped state
+        RESULT:
+
+      3.2.2.1.15:
+        NAME: Isolator shows an appropriate message if there is a license error
+        TEST: Ensure isolator is not installed. Start FPX. Ensure all license seats are taken.
+          Start Service. Start user User App.
+        EXPECTED: An appropriate error message is shown to the user. Isolator goes to stopped state
+        RESULT:
+
+    3.2.2.2:
+      NAME: CONTROL BUTTON
+
+      3.2.2.2.1:
+        NAME: Control button action is START if isolator state is STOPPED
+        TEST: Stop the FNBI service. Start the user app. The isolator should finally go to stopped state.
+        EXPECTED: The isolator control button label shows "stopped"
+        RESULT:
+
+      3.2.2.2.2:
+        NAME: Control button action is STOP if isolator state is NOT STOPPED
+        TEST: Start the FNBI service. Start the user app.
+        EXPECTED: While the isolator state is anything but STOPPED, the control button label is STOP
+        RESULT:
+
+      3.2.2.2.3:
+        NAME: Control button starts the isolator if it is STOPPED
+        TEST: Stop the FNBI service. Start the user app. The isolator should finally go to stopped state.
+          Click the start button
+        EXPECTED: The isolator starts ( it is expected to return to stopped state as service is stopped)
+        RESULT:
+
+      3.2.2.2.4:
+        NAME: Control button stops the isolator if it is in INSTALLING state
+        TEST: Ensure the isolator distro is uninstalled. Start the FNBI service.
+          Start the user app. Wait for the isolator to go to INSTALLING state. Click the stop button
+        EXPECTED: The isolator stops. The installation bar disappears. No error message is shown.
+          The wsl distro is stopped
+        RESULT:
+
+      3.2.2.2.5:
+        NAME: Control button stops the isolator if it is in any state other than STOPPED
+        TEST: Start the FNBI service. Start the user app. Wait for the isolator to go to RUNNING state.
+          Click the stop button
+        EXPECTED: The isolator stops. No error message is shown
+        RESULT:
+
+    3.2.2.3:
+      NAME: WSLG SWITCH
+      NOTES: Only for machines able to use MSFT WSLg. See tests 4.3.
+
+      3.2.2.3.1:
+        NAME: Default to use msft wslg
+        TEST: Install FNBI, run application, go to settings page.
+        EXPECTED: Use msft graphics selected
+        RESULT:
+
+      3.2.2.3.2:
+        NAME: Can turn off msft graphics
+        TEST: Install FNBI, run application, go to settings page, turn off msft graphics
+        EXPECTED: JSON file in %APPDATA%/Fortinet/FortiNBI/user_configuration.json has property
+          "use_msft_graphics" set to false
+        RESULT:
+
+      3.2.2.3.3:
+        NAME: Can turn on msft graphics
+        TEST: Perform test 3.2.2.3.2. Turn on msft graphics.
+        EXPECTED: JSON file in %APPDATA%/Fortinet/FortiNBI/user_configuration.json has property
+          "use_msft_graphics" set to true
+        RESULT:
+
+      3.2.2.3.4:
+        NAME: Failure to set configuration resets to ON state
+        TEST: Install FNBI. As administrator create file %APPDATA%/Fortinet/FortiNBI/user_configuration.json
+          ensuring that a "use_msft_graphics" property exists with value set to true. Remove write permissions
+          to file from the test user. Start FNBI, go to settings page, turn off MSFT graphics
+        EXPECTED: Switch resets state to ON position. Error message is shown, configuration file is unchanged
+        RESULT:
+
+      3.2.2.3.5:
+        NAME: Failure to set configuration resets to OFF state
+        TEST: Install FNBI. As administrator create file %APPDATA%/Fortinet/FortiNBI/user_configuration.json
+          ensuring that a "use_msft_graphics" property exists with value set to false. Remove write permissions
+          to file from the test user. Start FNBI, go to settings page, turn ON MSFT graphics
+        EXPECTED: Switch resets state to OFF position. Error message is shown, configuration file is unchanged
+        RESULT:
+
+  3.2.3:
+    NAME: FPX ADDR
+    3.2.3.1:
+      NAME: fpx addr label shows not detected when app first starts in automatic mode
+      TEST: Unset any proxy configuration in the machine. Start the user app for the first time
+        (or reset res/misc/fpx_addr.json)
+      EXPECTED: The fpx addr is shown as not detected
+      RESULT:
+
+    3.2.3.2:
+      NAME: fpx addr label shows not configured when app is in manual mode, but FPX addr has never been configured
+      TEST: Start the app for the first time (or reset res/misc/fpx_addr.json). Change mode to manual. Return to
+        status page
+      EXPECTED: The fpx addr is shown as not configured
+      RESULT:
+
+    3.2.3.3:
+      NAME: fpx addr label shows detected fpx addr
+      TEST: start the app for the first time, proxy must be set. Wait 2s after service is running and connected
+      EXPECTED: the fpx addr label shows the value found in the res/misc/fpx_addr.json
+      RESULT:
+
+    3.2.3.4:
+      NAME: fpx addr label updates when the value in res/misc/fpx_addr.json is changed
+      TEST: start the app for the first time, proxy must be set. Wait 2s after service is running and connected
+        modify the fpx addr inres/misc/fpx_addr.json
+      EXPECTED: the fpx addr label shows the new fpx addr
+      RESULT:
+
+    3.2.3.5:
+      NAME: The default fpx addr mode is automatic
+      TEST: Reset the res/misc/fpx_addr.json, start the app
+      EXPECTED: the fpx addr mode is automatic
+      RESULT:
+
+    3.2.3.6:
+      NAME: When the fpx addr mode is automatic, the set fpx addr text box and button are hidden
+      TEST: start the app, select automatic mode(if in manual)
+      EXPECTED: the set fpx addr text box and button are hidden
+      RESULT:
+
+    3.2.3.7:
+      NAME: fpx addr mode changes to manual from automatic
+      TEST: start the app with service running, select automatic mode(if in manual). Select manual mode
+      EXPECTED: The fpx addr mode changes to manual
+      RESULT:
+
+    3.2.3.8:
+      NAME: on error switching the fpx addr mode from automatic to manual the mode reverts to automatic
+      TEST: start the app, select automatic mode(if in manual). stop the service. Select manual mode
+      EXPECTED: after error the mode is reverted to automatic
+      RESULT:
+
+    3.2.3.9:
+      NAME: on error switching the fpx addr mode  from manual to automatic the mode reverts to manual
+      TEST: start the app, select manual mode(if in automatic). stop the service. Select automatic mode
+      EXPECTED: after error the mode is reverted to manual
+      RESULT:
+
+    3.2.3.10:
+      NAME: on error switching the fpx addr mode from automatic to manual, an error message is shown to the user
+      TEST: start the app, select automatic mode(if in manual). stop the service. Select manual mode
+      EXPECTED: on error an error message is shown
+      RESULT:
+
+    3.2.3.11:
+      NAME: on error switching the fpx addr mode from manual to automatic, an error message is shown to the user
+      TEST: start the app, select manual mode(if in automatic). stop the service. Select automatic mode
+      EXPECTED: on error an error message is shown
+      RESULT:
+
+    3.2.3.12:
+      NAME: on manual fpx addr mode, the set fpx addr text box and button are shown
+      TEST: start the app. Move to manual fpx addr mode
+      EXPECTED: the set fpx addr text box and button are shown
+      RESULT:
+
+    3.2.3.13:
+      NAME: Can only save valid addrs
+      TEST: "start the app. Move to manual fpx addr mode. Should only be able to set one of
+                ! for not accepted
+                accepted: 
+                ipv4
+                256 because == 0.0.1.1
+                ! 23424534653566535645746756 because larger than 2^32 -1
+                1.1.1.1
+                ipv6
+                [::3:3:3]
+                3:3::
+                fqdn
+                example.com
+                34234.com
+                23423.234234
+                ! com
+                ! .com"
+      EXPECTED: A dialog is shown if addr is not valid
+      RESULT:
+
+    3.2.3.14:
+      NAME: Can save fpx addr written in settings page
+      TEST: start the app, ensure the service starts, goto settings page, move to manual mode.
+        Write in the fpx addr, click save
+      EXPECTED: The fpx addr is saved to the res/misc/fpx_addr.json, the fpx addr label shows the new fpx addr
+      RESULT:
+
+    3.2.3.15:
+      NAME: On save fpx addr error, fpx addr is unchanged
+      TEST: start the app, stop the service. Goto settings page. Move to manual mode. Click the set fpx addr button.
+        Write in the fpx addr, click save
+      EXPECTED: after error, the fpx addr did not change in the label or res/misc/fpx_addr.json
+      RESULT:
+
+    3.2.3.16:
+      NAME: On save fpx addr error an error message is shown
+      TEST: start the app, stop the service, goto settings page. Move to manual mode. Click the set fpx addr button.
+        Write in the fpx addr, click save
+      EXPECTED: an error message is shown
+      RESULT:
+
+  3.2.4:
+    NAME: SYSTRAY
+
+    3.2.4.1:
+      NAME: Closing the GUI doesn't terminate the user app
+      TEST: Start the user app, click the X(close) button
+      EXPECTED: The user app process still runs, the system tray icon is present
+      RESULT:
+
+    3.2.4.2:
+      NAME: GUI can be reopened using the systray icon
+      TEST: start the user app, close the gui, click show gui in systray
+      EXPECTED: the gui is shown
+      RESULT:
+
+    3.2.4.3:
+      NAME: User app can be terminated using the systray
+      TEST: start the user app, click quit in systray
+      EXPECTED: the user app process is no longer running
+      RESULT:
+
+  3.2.5:
+    NAME: NOTIFICATIONS
+
+    3.2.5.1:
+      NAME: User is shown a systray notification when GUI is closed
+      TEST: Start the GUI, close the GUI window.
+      EXPECTED: A systray popup explaining that the User app is still alive is shown
+      RESULT:
+
+    3.2.5.2:
+      NAME: Extension set to install message is shown prompting the user to restart the browser if browser is
+        running
+      TEST: With extension not installed. registry entries cleared. start the browser,
+        start service, start user app
+      EXPECTED: The user is shown a message explaining that the extension is set to install for the browser and
+        that a browser restart is needed
+      RESULT:
+
+    3.2.5.3:
+      NAME: Extension set to install message is shown to the user
+      TEST: With extension not installed. registry entries cleared. stop the browser,
+        start service, start user app
+      EXPECTED: The user is shown a message explaining that the extension is set to install for the given browser
+      RESULT:
+
+    3.2.5.4:
+      NAME: Extension installed message is shown to the user
+      TEST: With extension set to install, start service,
+        start user app, start the browser.
+      EXPECTED: The user is shown a message that the extension has been installed (within a reasonable amount of
+        time)
+      RESULT:
+
+    3.2.5.5:
+      NAME: Extension is disabled message is shown to the user
+      TEST: With dev extension installed, using production build. start the browser, start user app
+        start service
+      EXPECTED: A message is shown to the user explaining that the dev extension has been disabled
+      RESULT:
+
+    3.2.5.6:
+      NAME: No such "...GUI is still open..." message is shown when GUI is forcefully terminated
+      TEST: Start user app. Terminate GUI on task manager.
+      EXPECTED: No notification is shown
+      RESULT:
+
+
+  3.2.6:
+    NAME: TERMINATION
+
+    3.2.6.1:
+      NAME: App terminates without issue during system shutdown
+      TEST: Start the user app. Shutdown windows
+      EXPECTED: Windows shuts down without interruptions
+      RESULT:
+
+    3.2.6.2:
+      NAME: App terminates without issue when terminated by task manager
+      TEST: Start the user app. Terminate it with the task manager
+      EXPECTED: The app terminates immediately. No remaining processes
+      RESULT:
+
+    3.2.6.3:
+      NAME: App terminates without issue when terminated by powershell
+      TEST: Start the user app. Terminate it with powershell's stop-process
+      EXPECTED: The app terminates immediately. No remaining processes
+      RESULT:
+
+    3.2.6.4:
+      NAME: App terminates without issue when terminated by taskkill
+      TEST: Start the user app. Terminate it with taskkill (force)
+      EXPECTED: The app terminates immediately. No remaining processes
+      RESULT:
+
+    3.2.6.5:
+      TEST_REF: 3.2.4.3
+
+  3.2.7:
+    NAME: RENDERING
+
+    3.2.7.1:
+      NAME: App renders correctly in screen size 13" of resolution 780p
+      TEST: In a machine of screen size 13" set resolution to 780p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.2:
+      NAME: App renders correctly in screen size 13" of resolution 1080p
+      TEST: In a machine of screen size 13" set resolution to 1080p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.3:
+      NAME: App renders correctly in screen size 13" of resolution 2k
+      TEST: In a machine of screen size 13" set resolution to 2k
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.4:
+      NAME: App renders correctly in screen size 13" of resolution 4K
+      TEST: In a machine of screen size set 13" resolution to 4K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.5:
+      NAME: App renders correctly in screen size 15" of resolution 780p
+      TEST: In a machine of screen size 15" set resolution to 780p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.6:
+      NAME: App renders correctly in screen size 15" of resolution 1080p
+      TEST: In a machine of screen size 15" set resolution to 1080p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.7:
+      NAME: App renders correctly in screen size 15" of resolution 2k
+      TEST: In a machine of screen size set 15" resolution to 2K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.8:
+      NAME: App renders correctly in screen size 15" of resolution 4K
+      TEST: In a machine of screen size 15" set resolution to 4K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.9:
+      NAME: App renders correctly in screen size 17" of resolution 780p
+      TEST: In a machine of screen size 17" set resolution to 780p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.10:
+      NAME: App renders correctly in screen size 17" of resolution 1080p
+      TEST: In a machine of screen size 17" set resolution to 1080p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.11:
+      NAME: App renders correctly in screen size 17" of resolution 2k
+      TEST: In a machine of screen size 17" set resolution to 2K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.12:
+      NAME: App renders correctly in screen size 17" of resolution 4K
+      TEST: In a machine of screen size 17" set resolution to 4K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.13:
+      NAME: App renders correctly in screen size large (recommend 27") of resolution 780p
+      TEST: In a machine of screen size large (recommend 27") set resolution to 780p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.14:
+      NAME: App renders correctly in screen size large (recommend 27") of resolution 1080p
+      TEST: In a machine of screen size large (recommend 27")set resolution to 1080p
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.15:
+      NAME: App renders correctly in screen size large (recommend 27") of resolution 2k
+      TEST: In a machine of screen size large (recommend 27")set resolution to 2K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+    3.2.7.16:
+      NAME: App renders correctly in screen size large (recommend 27") of resolution 4K
+      TEST: In a machine of screen size large (recommend 27") set resolution to 4K
+      EXPECTED: The application window is of reasonable proportions with no text cutoff
+      RESULT:
+
+  3.2.8:
+    NAME: LOGS
+
+    3.2.8.1:
+      NAME: User logs are stored
+      TEST: Start FNBI. Wait for isolator to start. Click collect user logs. Choose where to store file
+      EXPECTED: A zip file is found where chosen. The zip file contains the user logs and a tar.gz file for
+        the isolator logs. The isolator logs do not contain any folder structure, and all the contents
+        of $ISOLATOR_DIR/logs (as of now /mnt/fnbi-wslg/logs) are present
+      RESULT:
+
+    3.2.8.2:
+      NAME: Service logs are stored
+      TEST: Start FNBI. Wait for isolator to start. Click collect service logs. Give authorization to
+        the executable. Choose where to store file
+      EXPECTED: A zip file is found where chosen. The zip file contains the user logs, the service logs,
+        and a tar.gz file for the isolator logs. The isolator logs do not contain any folder structure,
+        and all the contents of $ISOLATOR_DIR/logs (as of now /mnt/fnbi-wslg/logs) are present
+      RESULT:
+
+    3.2.8.3:
+      NAME: No logs are stored if no privileged is given
+      TEST: Start FNBI. Wait for isolator to start. Click collect service logs. Refuse authorization to
+        the executable.
+      EXPECTED: The folder $USER_TEMP$/Fortinet/FortiNBI/temp/log_collection is empty. An appropriate message
+        is shown
+      RESULT:
+
+    3.2.8.4:
+      NAME: CAPP logs are stored without error when no isolator logs are present
+      TEST: Start FNBI. Wait for isolator to install. Stop the isolator. Clear the isolator logs
+        (run clean_logs.sh within the isolator distro). Click collect user logs.
+        Choose where to store file
+      EXPECTED: A zip file is found where chosen. The zip file contains the user logs. No isolator logs are
+        contained within the zip
+      RESULT:
+
+    3.2.8.5:
+      NAME: CAPP logs are stored without error when isolator is not installed
+      TEST: Ensure the isolator is not installed. Start FNBI. Stop the isolator before install. Click collect user logs.
+        Choose where to store file
+      EXPECTED: A zip file is found where chosen. The zip file contains the user logs.
+      RESULT:
+
+
+
+3.3:
+  NAME: ISOLATOR
+
+  3.3.1:
+    NAME: INSTALLATION
+
+    3.3.1.1:
+      NAME: Installs OK
+      TEST: Ensure isolator is not installed. Start service, start FPX. Then, start GUI.
+      EXPECTED: Isolator is installed
+      RESULT:
+
+
+    3.3.1.2:
+      NAME: No need to install if isolator is already installed and no new isolator is present
+      TEST: Ensure isolator is installed. Start FPX mock set to ensure isolator is not modified. start service. Start User App
+      EXPECTED: isolator is not installed
+      RESULT:
+
+    3.3.1.3:
+      NAME: Isolator installs if there is a new isolator image present
+      TEST: Ensure isolator is installed. Start FPX mock set to ensure isolator is modified. start service. Start User App
+      EXPECTED: Old isolator is removed, new isolator is installed
+      RESULT:
+
+    3.3.1.4:
+      NAME: Isolator does not install if the service is not running
+      TEST: Ensure isolator is not installed. Ensure service is stopped. Start user User App
+      EXPECTED: the User app shows isolator state as stopped
+      RESULT:
+
+    3.3.1.5:
+      NAME: Isolator does not install if the FPX is not running
+      TEST: Ensure isolator is not installed. Ensure FPX is stopped. start service. Start user User App
+      EXPECTED: The User app shows isolator state as stopped
+      RESULT:
+
+    3.3.1.8:
+      NAME: WSL is installed if needed
+      TEST: Ensure isolator is not installed. Ensure WSL, WSL kernel is not installed. Start FPX. Start Service.
+        wait 30s. Disable WSL, virtual machine platform, uninstall WSL kernel. Start user User App.
+      EXPECTED: WSL is installed, user is shown message asking to restart the machine
+      RESULT:
+
+    3.3.1.9:
+      NAME: Isolator installation is cleaned up
+      TEST: Ensure isolator is not installed. Start FPX. Start Service. Start user User App. Wait for installation to complete
+      EXPECTED: After installation, .tar and .tar.gz files in %ALLUSERSPROFILE%/Fortinet/FortiNBI/fortinbi-isolator
+        and 'C:\\ProgramData/Fortinet/FortiNBI/fortinbi-isolator' are removed
+      RESULT:
+    
+    3.3.1.10:
+      NAME: Isolator installation files are cleaned up if decompression fails
+      TEST: Ensure isolator is not installed. Ensure compressed isolator image is corrupt. Start FPX. Start Service. Start user User App.
+      EXPECTED: After error message, .tar and .tar.gz files in %ALLUSERSPROFILE%/Fortinet/FortiNBI/fortinbi-isolator
+        and 'C:\\ProgramData/Fortinet/FortiNBI/fortinbi-isolator' are removed
+      RESULT:
+
+    3.3.1.11:
+      NAME: Isolator installation fails gracefully if FPX is not running
+      TEST: Ensure isolator is not installed. Stop FPX. Start FNBI
+      EXPECTED: The isolator installation starts and fails. An appropriate message is shown
+      RESULT:
+
+    3.3.1.12:
+      NAME: Isolator installation fails gracefully if captive portal certificate is not valid
+      TEST: Ensure isolator is not installed. Ensure captive portal uses a certificate not issued by Fortinet_CA_SSL
+        (as it would with the initial configuration). Start FNBI
+      EXPECTED: The isolator installation starts and fails. An error message is shown which identifies the
+        captive portal certificate as the problem.
+      RESULT:
+
+    3.3.1.13:
+      NAME: Isolator installation fails gracefully if FPX certificate is not valid
+      TEST: Ensure isolator is not installed. Remove the FPX CA from the machine. Start FNBI
+      EXPECTED: The isolator installation starts and fails. An error message is shown which identifies the
+        captive portal certificate as the problem.
+      RESULT:
+
+
+    3.3.3.1.14:
+      NAME: CAPTIVE PORTAL
+      3.3.3.1.14.1:
+        NAME: Isolator works with FQDN captive portal in auto mode.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to FQDN; https enabled.
+          Start FNBI Service. Start user User App.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.2:
+        NAME: Isolator works with IP captive portal in auto mode.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https enabled.
+          Start FNBI Service. Start user User App.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+
+      3.3.3.1.14.3:
+        NAME: Isolator works with FQDN captive portal in auto mode, with http.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to FQDN; https disabled.
+          Start FNBI Service. Start user User App.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.4:
+        NAME: Isolator works with IP captive portal in auto mode, with http.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https disabled.
+          Start FNBI Service. Start user User App.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.5:
+        NAME: Isolator updates captive portal info correctly to FQDN.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP. Start FNBI Service.
+          Start user User App. Wait for isolator install. Stop isolator. Remove isolator manually. Change
+          captive portal to use FQDN. Start isolator.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.6:
+        NAME: Isolator updates captive portal info correctly to IP.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to FQDN. Start FNBI Service.
+          Start user User App. Wait for isolator install. Stop isolator. Remove isolator manually. Change
+          captive portal to use FQDN. Start isolator.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.7:
+        NAME: Isolator does not work with FQDN captive portal in manual mode when no proxy is configured.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to FQDN; https enabled.
+          Unset proxy in client. Start FNBI Service. Start user User App. Set mode to manual and configure the
+          FPX IP. Start isolator
+        EXPECTED: The isolator is not installed
+        RESULT:
+
+
+      3.3.3.1.14.8:
+        NAME: Isolator works with FQDN captive portal in manual mode when proxy is configured.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to FQDN; https enabled.
+          Set proxy in client. Start FNBI Service. Start user User App. Set mode to manual and configure the
+          FPX IP. Start isolator
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.9:
+        NAME: Isolator works with IP captive portal in manual mode when no proxy is configured.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https enabled.
+          Unset proxy in client. Start FNBI Service. Start user User App. Set mode to manual and configure the
+          FPX IP. Start isolator
+        EXPECTED: The isolator is installed
+        RESULT:
+
+
+      3.3.3.1.14.10:
+        NAME: Isolator works with IP captive portal in manual mode when proxy is configured.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https enabled.
+          Set proxy in client. Start FNBI Service. Start user User App. Set mode to manual and configure the
+          FPX IP. Start isolator
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.11:
+        NAME: Isolator works with IP, HTTPS, captive portal if the port changes.
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https enabled.
+          Set proxy in client. Start FNBI Service. Start user User App. Stop isolator. Manually remove isolator.
+          change the https port in the FPX. Start the isolator.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+      3.3.3.1.14.12:
+        NAME: Isolator works with IP, HTTPS, captive portal if the port changes .
+        TEST: Ensure isolator is not installed. Start FPX. Set captive portal to IP; https disabled.
+          Set proxy in client. Start FNBI Service. Start user User App. Stop isolator. Manually remove isolator.
+          change the http port in the FPX. Start the isolator.
+        EXPECTED: The isolator is installed
+        RESULT:
+
+
+  3.3.2:
+    NAME: MANAGEMENT
+
+
+    3.3.2.1:
+      NAME: On User app startup, isolator is automatically started
+      TEST: With all systems stopped. With isolator installed. Start service. Start User app
+      EXPECTED: The isolator is started
+      RESULT:
+
+    3.3.2.2:
+      NAME: CAPP hostname is set in isolator
+      TEST: With all systems stopped. With isolator installed. Start service. Start User app. Wait for isolator to start
+      EXPECTED: In the isolator hosts file /etc/hosts there is an entry pointing to system.fortinbi.fortinet.com
+      RESULT:
+
+    3.3.2.3:
+      NAME: Trusted Root CA are synced with isolator
+      TEST: With all systems stopped. With isolator installed. Start service. Add root CA "TEST" to host. Start User app. Wait for isolator to start.
+        In the isolator, navigate to a page that uses certificate signed with the "TEST" root CA.
+      EXPECTED: Isolated chrome does not show any certificate errors
+      RESULT:
+
+    3.3.2.4:
+      NAME: Proxy settings are synced with isolator
+      TEST: With all systems stopped. With isolator installed. Start service. Start User app. Wait for isolator to start.
+        Navigate to isolated page.
+      EXPECTED: The navigation is detected in proxy
+      RESULT:
+
+    3.3.2.5:
+      NAME: Isolator does not start if service is not running
+      TEST: With all systems stopped. With isolator installed. Start User app
+      EXPECTED: Isolator does not start. The wsl distro is stopped
+      RESULT:
+
+
+    3.3.2.6:
+      NAME: Isolator starts if a isolation request is received
+      TEST: With all systems stopped. With isolator installed. Start User app. Wait for the isolator to
+        fail to start. Start the service. Navigate to isolated URL
+      EXPECTED: The isolator starts
+      RESULT:
+
+  3.3.3:
+    NAME: WSLG mode
+    NOTES: Only for machines able to use MSFT WSLg. See tests 4.3. Abbreviation. UMG="Use Microsoft graphics..."
+
+    3.3.3.1:
+      NAME: Isolator starts with MSFT WSLG when UMG is ON
+      TEST: Install FNBI, start FNBI, stop isolator. Go to settings page and ensure UMG is ON. Perform test 4.3.2
+      EXPECTED: test 4.3.2 passes
+      RESULT:
+
+    3.3.3.2:
+      NAME: Isolator starts with FNBI WSLG when UMG is OFF
+      TEST: Install FNBI, start FNBI, stop isolator. Go to settings page and ensure
+        UMG is OFF. Perform test 4.3.1
+      EXPECTED: test 4.3.1 passes
+      RESULT:
+
+    3.3.3.3:
+      NAME: Switching MSFT graphics OFF during "assessing installation" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start isolator. When in "assessing installation" go
+        to settings and turn UMG OFF.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.2
+      RESULT:
+
+    3.3.3.4:
+      NAME: Switching MSFT graphics OFF during "installing" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start isolator. When in "installing" go
+        to settings and turn UMG OFF.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.2
+      RESULT:
+
+    3.3.3.5:
+      NAME: Switching MSFT graphics OFF during "starting" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start isolator. When in "starting" go
+        to settings and turn UMG OFF.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.2
+      RESULT:
+
+    3.3.3.6:
+      NAME: Switching MSFT graphics OFF during "running" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start isolator. When in "running" go
+        to settings and turn UMG OFF.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.2
+      RESULT:
+
+    3.3.3.7:
+      NAME: Switching MSFT graphics OFF during "stopped" state doesn't cause isolator to start
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Stop the isolator. Go to settings and turn UMG is off.
+      EXPECTED: Isolator remains stopped
+      RESULT:
+
+    3.3.3.8:
+      NAME: Switching MSFT graphics OFF during "stopping" state doesn't cause isolator to start
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start the isolator. Stop the isolator. While the
+        isolator is in "stopping" state, go to settings and turn UMG is off.
+      EXPECTED: Isolator goes to stopped state
+      RESULT:
+
+
+    3.3.3.9:
+      NAME: Switching MSFT graphics ON during "assessing installation" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is OFF. Start isolator. When in "assessing installation" go
+        to settings and turn UMG ON.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.1
+      RESULT:
+
+    3.3.3.10:
+      NAME: Switching MSFT graphics OFF during "installing" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is OFF. Start isolator. When in "installing" go
+        to settings and turn UMG ON.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.1
+      RESULT:
+
+    3.3.3.11:
+      NAME: Switching MSFT graphics OFF during "starting" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is OFF. Start isolator. When in "starting" go
+        to settings and turn UMG ON.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.1
+      RESULT:
+
+    3.3.3.12:
+      NAME: Switching MSFT graphics OFF during "running" state causes isolator to restart and function
+        correctly.
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start isolator. When in "running" go
+        to settings and turn UMG ON.
+      EXPECTED: Isolator restarts, and functions correctly as in test 4.3.1
+      RESULT:
+
+    3.3.3.13:
+      NAME: Switching MSFT graphics ON during "stopped" state doesn't cause isolator to start
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Stop the isolator. Go to settings and turn UMG is off.
+      EXPECTED: Isolator remains stopped
+      RESULT:
+
+    3.3.3.14:
+      NAME: Switching MSFT graphics ON during "stopping" state doesn't cause isolator to start
+      TEST: Install FNBI, start FNBI. Ensure UMG is ON. Start the isolator. Stop the isolator. While the
+        isolator is in "stopping" state, go to settings and turn UMG is off.
+      EXPECTED: Isolator goes to stopped state
+      RESULT:
+

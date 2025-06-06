@@ -1,0 +1,457 @@
+2.1:
+    NAME: STARTUP/TERMINATION
+
+    2.1.1:
+        NAME: Service starts when no other system is running
+        TEST: With chrome closed, gui and FPX not running. Start service
+        EXPECTED: Service starts without crash
+        RESULT:
+
+    2.1.2:
+        NAME: Service starts when extension and FPX is not running, but GUI is running
+        TEST: With chrome closed, FPX not running. GUI running. Start service
+        EXPECTED: Service starts without crash. Gui connects to service
+        RESULT:
+
+    2.1.3:
+        NAME: Service starts when extension is running, but GUI and FPX is not running
+        TEST: With chrome open, FPX not running. GUI not running. Start service
+        EXPECTED: Service starts without crash. Extension connects to service
+        RESULT:
+
+    2.1.4:
+        NAME: Service starts when extension is running, and GUI is running, but FPX is not
+        TEST: With chrome open, FPX not running. GUI running. Start service
+        EXPECTED: Service starts without crash
+        RESULT:
+
+    2.1.5:
+        NAME: Service terminates correctly while it is starting
+        TEST: With all other systems running start service. Immediately stop service
+        EXPECTED: Service terminates without hanging
+        RESULT:
+
+    2.1.6:
+        NAME: Service terminates correctly after 5m of continuous traffic
+        TEST: With all other systems running start service. Run traffic in browser for 5m. Terminate service
+        EXPECTED: Service terminates without hanging
+        RESULT:
+
+
+2.2:
+    NAME: FPX ADDR DETECTION
+
+    Note: The configuration file is now located at: C:\ProgramData\Fortinet\FortiNBI\application_state.json
+2.2.1: FPX ADDR PERSISTENCE
+2.2.1.1:
+NAME: Empty application_state.json
+TEST: Start service when application_state.json is empty
+EXPECTED: Default mode is used(automatic). FPX Addr remains null until interaction with either the extension or GUI
+RESULT:
+2.2.1.2:
+NAME: Non-existent application_state.json
+TEST: Start service when application_state.json does not exist
+EXPECTED: Default mode is used(automatic). FPX Addr remains null until interaction with either the extension or GUI
+RESULT:
+2.2.1.3:
+NAME: Corrupted application_state.json
+TEST: Start service when application_state.json is corrupted (cannot be parsed as JSON)
+EXPECTED: Default mode is used(automatic). FPX Addr remains null until interaction with either the extension or GUI connects
+RESULT:
+2.2.1.4:
+NAME: application_state.json contains no FPX addr, but automatic mode is set
+TEST: Start service when application_state.json exist, contains automatic detection mode, but no fpx addr
+EXPECTED: Automatic mode is used. FPX Addr remains null until interaction with either the extension or GUI connects
+RESULT:
+2.2.1.5:
+NAME: application_state.json contains no FPX addr, but manual mode is set
+TEST: Start service when application_state.json exist, contains manual detection mode, but no fpx addr
+EXPECTED: Manual mode is used. FPX Addr remains null until user sets FPX addr in GUI
+RESULT:
+2.2.1.6:
+NAME: Change in mode from manual to auto is persisted
+TEST: In manual mode, change to automatic
+EXPECTED: application_state.json now shows mode as automatic
+RESULT:
+2.2.1.7:
+NAME: Change in mode from auto to manual is persisted
+TEST: In automatic mode, change to manual
+EXPECTED: application_state.json now shows mode as manual
+RESULT:
+2.2.1.8:
+NAME: Change in fpx addr is persisted while in automatic mode
+TEST: In automatic mode, change the OS proxy settings, in chrome, navigate
+EXPECTED: application_state.json now shows new fpx addr
+RESULT:
+2.2.1.9:
+NAME: Change in fpx addr is persisted while in manual mode
+TEST: In manual mode, change the fpx addr in the GUI
+EXPECTED: application_state.json now shows new fpx addr
+RESULT:
+2.2.1.10:
+NAME: FPX addr file is created again if deleted while all systems running
+TEST: With service and user app running, delete application_state.json file
+EXPECTED: Within 2s the file is created again
+RESULT:
+
+
+
+    2.2.2:
+        NAME: AUTOMATIC MODE
+
+        2.2.2.1:
+            NAME: Get proxy from User App if [SYSTEM, DIRECT, BYPASS, CANNOT_DETERMINE, AUTODETECT] proxy is provided by extension
+            TEST: With all systems running. Repeat for each type in array above. Navigate
+            EXPECTED: for each TEST, the fpx addr is fetched from the OS proxy settings
+            RESULT:
+
+        2.2.2.2:
+            NAME: Extension proxy supersedes OS proxy
+            TEST: With all systems running. Browser set to use a specific proxy. Navigate
+            EXPECTED: Proxy provided by extension is used. OS proxy ignored
+            RESULT:
+
+        2.2.2.3:
+            NAME: Switch from MANUAL to AUTOMATIC mode when fpx addr was set to reachable fpx
+            TEST: With all systems running. fpx addr mode set to MANUAL. fpx addr points to reachable fpx.
+                Set fpx addr mode to automatic.
+            EXPECTED: Proxy mode successfully changes to automatic. fpx addr doesn't change
+            RESULT:
+
+        2.2.2.4:
+            NAME: Switch from MANUAL to AUTOMATIC mode when fpx addr was set to non-reachable fpx
+            TEST: With all systems running. fpx addr mode set to MANUAL. fpx addr points to non-reachable fpx.
+                Set fpx addr mode to automatic.
+            EXPECTED: Proxy mode successfully changes to automatic. fpx addr doesn't change
+            RESULT:
+
+        2.2.2.5:
+            NAME: PAC from specific url HTTP
+            TEST: With all systems stopped, set the PAC URL in windows with url using HTTP. Start system
+            EXPECTED: The FPX addr is evaluated from the PAC script
+            RESULT:
+
+
+        2.2.2.6:
+            NAME: PAC from specific url HTTPS
+            TEST: With all systems stopped, set the PAC URL in windows with url using HTTPS. Start system
+            EXPECTED: The FPX addr is evaluated from the PAC script
+            RESULT:
+
+        2.2.2.7:
+            NAME: DNS WPAD
+            TEST: With all system stopped. Join computer to domain controller. DNS server for domain controller
+                  resolved "wpad.<domain>" to http server that provides PAC script. Start system.
+            EXPECTED: FPX addr is evaluated from pac script
+            RESULT:
+
+        2.2.2.8:
+            NAME: Fixed server precedes PAC
+            TEST: With PAC URL setup, also setup fixed server URL to use a different proxy. start system
+            EXPECTED: The FPX addr used is the fixed server
+            RESULT:
+
+        2.2.2.9:
+            NAME: Fixed server precedes WPAD
+            TEST: With WPAD setup, also setup fixed server URL to use a different proxy. start system
+            EXPECTED: The FPX addr used is the fixed server
+            RESULT:
+
+
+        2.2.2.10:
+            NAME: PAC URL precedes WPAD
+            TEST: With all systems stopped, set the PAC URL in windows. Also setup to use WPAD. WPAD and PAC URL should
+                point to different PAC scripts. Start system
+            EXPECTED: The FPX addr is evaluated from the PAC URL
+            RESULT:
+
+    2.2.3:
+        NAME: MANUAL MODE
+
+        2.2.3.1:
+            NAME: automatic fpx addr evaluation is ignored
+            TEST: With all systems running. fpx addr mode set to MANUAL. OS proxy settings set to a different addr than the
+                currently used fpx addr. Navigate
+            EXPECTED: fpx addr does not change
+            RESULT:
+
+
+        2.2.3.2:
+            NAME: fpx addr can be changed
+            TEST: With all systems running. fpx addr mode set to MANUAL. set fpx addr in User App
+            EXPECTED: fpx addr changes
+            RESULT:
+
+        2.2.3.3:
+            NAME: switch from auto to manual fpx mode
+            TEST: With all systems running. fpx addr mode set to AUTOMATIC. set fpx addr mode to MANUAL
+            EXPECTED: fpx addr mode changes to MANUAL. fpx addr does not change
+            RESULT:
+
+    2.2.4:
+        NAME: COMMON AUTO/MANUAL MODE
+
+        2.2.4.1:
+            NAME: fpx addr from null to non-reachable host
+            TEST: start system when fpx_addr.json contains no fpx addr. set fpx addr to non-reachable host
+            EXPECTED: fpx addr is correctly set. Service cannot connect to host. No crash
+            RESULT:
+
+        2.2.4.2:
+            NAME: fpx addr from null to reachable host
+            TEST: start system when fpx_addr.json contains no fpx addr. set fpx addr to reachable host
+            EXPECTED: fpx addr is correctly set. Service connects to host.
+            RESULT:
+
+        2.2.4.3:
+            NAME: fpx addr from reachable host to non-reachable host
+            TEST: with all systems running. Service connected to FPX. set fpx addr to non-reachable host
+            EXPECTED: fpx addr is correctly set. Service cannot connect to host
+            RESULT:
+
+        2.2.4.4:
+            NAME: fpx addr from non-reachable to reachable host
+            TEST: With all systems running. fpx addr set to non-reachable host. set fpx addr to reachable host
+            EXPECTED: fpx addr is correctly set. Service connects to host.
+            RESULT:
+
+        2.2.4.5:
+            NAME: fpx addr from non-reachable to non-reachable host
+            TEST: With all systems running. fpx addr set to non-reachable host. set fpx addr to non-reachable host
+            EXPECTED: fpx addr is correctly set. Service cannot connect to host.
+            RESULT:
+
+        2.2.4.6:
+            NAME: fpx addr from reachable to reachable host
+            TEST: With all systems running. fpx addr set to reachable host. set fpx addr to reachable host
+            EXPECTED: fpx addr is correctly set. Service disconnects from old fpx and connect to new fpx.
+            RESULT:
+
+2.3:
+    NAME: CONTENT RATING
+
+    2.3.1:
+        NAME: On FPX not connected rating falls back to block
+        TEST: With all systems running except for FPX. try to navigate
+        EXPECTED: navigation is blocked
+        RESULT:
+
+    2.3.2:
+        NAME: On FPX timeout rating falls back to block
+        TEST: With all systems running. try to navigate to url that causes time out
+        EXPECTED: navigation is blocked
+        RESULT:
+
+    2.3.3:
+        NAME: On FPX error response falls back to block
+        TEST: With all systems running. try to navigate to url that causes error response
+        EXPECTED: navigation is blocked
+        RESULT:
+
+    2.3.4:
+        NAME: On FPX crash falls back to block
+        TEST: With all systems running. try to navigate to url that causes FPX to crash
+        EXPECTED: navigation is blocked
+        RESULT:
+
+    2.3.5:
+        NAME: On User App not connected. Isolation falls back to freeze
+        TEST: With all systems running except for User app. try to navigate
+        EXPECTED: navigation is blocked
+        RESULT:
+
+    2.3.6:
+        NAME: On isolator not running. Isolation falls back to freeze
+        TEST: With all systems running except for User app. try to navigate
+        EXPECTED: navigation is blocked
+        RESULT:
+
+2.4:
+    NAME: REQUEST HOLDING
+
+    2.4.1:
+        NAME: Service can handle 1000 concurrent requests
+        TEST: With all systems running. Instantly generate 1000 held requests and their respective content rating 
+              requests
+        EXPECTED: All held requests receive 200 OK response. All ws content rating requests are responded.
+        RESULT:
+
+    2.4.2:
+        NAME: Held request is released on error
+        TEST: With all system running. Navigate. Cause Service-FPX connection to be severed.
+        EXPECTED: Held request is instantly released
+        RESULT:
+
+    2.4.3:
+        NAME: Held resource request doesn't cause CORS warning
+        TEST: With all systems running. Load page that generates an allowed cross-origin resource request
+        EXPECTED: The request loads. No CORS warnings are shown in the browser console
+        RESULT:
+
+    2.4.4:
+        NAME: HTTP server can select port from a range if a given port is already in-use
+        TEST: With no system running. Start program that occupies one of the ports Start service.
+        EXPECTED: HTTP server selects the next available port from the posible set
+        RESULT:
+
+2.5:
+    NAME: EXTENSION MANAGEMENT
+    
+    2.5.1:
+        NAME: CHROME
+        2.5.1.1:
+            NAME: Extension installs when chrome is running
+            TEST: With extension not installed start service. Restart chrome
+            EXPECTED: Message is shown to user asking to restart. extension is installed in chrome.
+            RESULT:
+    
+        2.5.1.2:
+            NAME: Extension installs when chrome is not running
+            TEST: With extension not installed start service. start chrome
+            EXPECTED: Message is shown to user. Extension is installed in chrome.
+            RESULT:
+    
+        2.5.1.3:
+            NAME: No action needed if extension is installed already
+            TEST: With extension installed. start service.
+            EXPECTED: No duplicated or removed entries in chrome's registry keys
+            RESULT:
+    
+    2.5.2:
+        NAME: FIREFOX
+        2.5.2.1:
+            NAME: Extension is installed when FF is running
+            TEST: With extension not installed, start service. Restart FF
+            EXPECTED: Message is shown to user asking to restart. extension is installed in FF.
+            RESULT:
+
+        2.5.2.2:
+            NAME: Extension installs when FF is not running
+            TEST: With extension not installed start service. start FF
+            EXPECTED: Message is shown to user. Extension is installed in chrome.
+            RESULT:
+
+        2.5.2.3:
+            NAME: No action needed if extension is installed already
+            TEST: With extension installed. start service.
+            EXPECTED: No duplicated or removed entries in chrome's registry keys. No message shown to user
+            RESULT:
+
+        2.5.2.4:
+            NAME: Extension is installed if previously blocked
+            TEST: With extension uninstalled, all systems stopped.
+                Add extension ID to the uninstall list in registry 
+                HKLM\Software\Policies\Mozilla\Firefox\Extensions\Uninstall\
+                (see https://github.com/mozilla/policy-templates#extensions).
+                Start service. start FF
+            EXPECTED: Extension is removed from uninstall list, extension is installed
+            RESULT:
+
+        2.5.2.5:
+            NAME: Existing ExtensionSettings are not removed by our policy
+            TEST: With extension uninstalled, all systems stopped.
+                Create an ExtensionSettings policy ( see https://github.com/mozilla/policy-templates#extensionsettings)
+                start service.
+            EXPECTED: Our policy is merged with the existing policy
+            RESULT:
+
+        2.5.2.6:
+            NAME: Extension updates if newer is available
+            TEST: With system installed, extension installed in FF. Install FNBI package with new 
+                   extension (obtain from dev). Start, or restart FF.
+            EXPECTED: The new extension version has been installed.
+            RESULT:
+
+        2.5.2.7:
+            NAME: Extension update message is shown to user if FF is not running when installing
+            TEST: With system installed, FF stopped. Install FNBI package with new extension (obtain from dev)
+            EXPECTED: Message is shown to the user. Does not request FF restart
+            RESULT:
+
+        2.5.2.8:
+            NAME: Extension update message is shown to user if FF is running when installing
+            TEST: With system installed, FF running. Install FNBI package with new extension (obtain from dev)
+            EXPECTED: Message is shown to the user requesting FF restart
+            RESULT:
+
+    2.5.3:
+        NAME: COMMON
+        
+        2.5.3.1:
+            NAME: only valid extensions can communicate with CAPP
+            TEST: With all systems running. connect to the CAPP and send registration message with an invalid extension_id
+            EXPECTED: The extension_id is added to the block list. The browser is restarted
+            RESULT:
+
+        2.5.3.2:
+            NAME: dead extension can be replaced
+            TEST: With all systems running. Register extension no.1 in CAPP. Try to register extension no.2. Extension no.1
+                does not respond to alive request
+            EXPECTED: Service disconnects extension no.1. Service allows extension no.2 to connect.
+            RESULT:
+
+        2.5.3.3:
+            NAME: alive extension cannot be replaced
+            TEST: With all systems running. Register extension no.1 in CAPP. Try to register extension no.2 with
+                same browser and extension_id as extension no.1. Extension no.1 responds to alive request
+            EXPECTED: Service does not allow extension no.2 to connect
+            RESULT:
+2.6:
+    NAME: MISC
+
+    2.6.1:
+        NAME: CAPP FQDN is added to proxy bypass list in host
+        TEST: CAPP FQDN is not set in system proxy bypass list. start service
+        EXPECTED: CAPP FQDN is added to system proxy bypass list
+        RESULT:
+
+    2.6.2:
+        NAME: CAPP FQDN is not duplicated in system proxy bypass list
+        TEST: CAPP FQDN is set in system proxy bypass list. start service
+        EXPECTED: CAPP FQDN is not added again to system proxy bypass list
+        RESULT:
+
+2.7:
+    NAME: WSL Installation
+
+    2.7.1:
+        NAME: WSL is installed automatically
+        TEST: With all other systems stopped. WSL and WSL kernel not installed. Start service.
+        EXPECTED: WSL and Virtual Machine Platform are enabled. Kernel is installed. (restart still needed)
+        RESULT:
+
+2.8:
+  NAME: TRUST
+
+  2.8.1:
+    NAME: CAPP CA is added to trusted root CA
+    TEST: CAPP CA is not present in trusted root CA list. Start service
+    EXPECTED: CAPP CA is added to trusted root CA list
+    RESULT:
+
+
+  2.8.2:
+    NAME: CAPP CA is replaced in trusted root CA
+    TEST: Old CAPP CA is present in trusted root CA list. Take note of the old CA thumbprint. Start service.
+    EXPECTED: The CAPP CA was replaced in the trusted root CA list. The thumbprint has changed.
+    RESULT:
+
+  2.8.3:
+    NAME: FNBI cert is trusted
+    TEST: Install FNBI. With service running, in browser navigate to 
+          https://system.fortinbi.fortinet.com:<port>/apiV1_0/discover. Where port belongs to a set of possible ports, 
+          which an FNBI dev should provide; most likely 5000.
+    EXPECTED: The request succeeds and OK is shown in the browser. No certificate warnings
+    RESULT:
+
+  2.8.4:
+    NAME: CAPP CA is added again to trusted root CA store if deleted
+    TEST: Start service. Delete certificate. Wait 5m. Check the cert store
+    EXPECTED: CAPP CA is added to trusted root CA list
+    RESULT:
+
+  2.8.5:
+    NAME: Isolator RDP certificate is trusted.
+    TEST: Start FNBI using FNBI WSLg.
+    EXPECTED: No certificate warning shown during RDP connection setup
+    RESULT:

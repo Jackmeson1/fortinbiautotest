@@ -1,0 +1,107 @@
+4.1:
+    NAME: INSTALLATION
+
+4.2:
+    NAME: ISOLATED BROWSER
+
+    4.2.1:
+        NAME: PROXY SETTINGS
+
+        4.2.1.1:
+            NAME: Isolated browser uses fixed proxy settings
+            TEST: In host, set fixed proxy. Start system, start isolator, navigate to isolated page.
+            EXPECTED: Page is downloaded through fixed proxy
+            RESULT:
+
+        4.2.1.2:
+            NAME: Isolated browser uses PAC URL
+            TEST: In host set PAC URL. Start system, start isolator, navigate to isolated page.
+            EXPECTED: Page is downloaded through proxy indicated by pac script
+            RESULT:
+
+        4.2.1.3:
+            NAME: Isolated browser uses WPAD
+            TEST: In host set WPAD to be used. Start system, start isolator, navigate to isolated page
+            EXPECTED: Page is downloaded through proxy indicated by WPAD
+            RESULT:
+
+        4.2.1.4:
+            NAME: Isolated browser fixed proxy precedes PAC URL
+            TEST: In host set fixed proxy, set PAC URL. PAC URL should resolve to a different proxy. Start system,
+                start isolator navigate to isolated page
+            EXPECTED: Page is downloaded through fixed proxy
+            RESULT:
+
+        4.2.1.5:
+            NAME: Isolated browser fixed proxy precedes WPAD
+            TEST: In host set fixed proxy, set WPAD. WPAD should resolve to a different proxy. Start system,
+                start isolator navigate to isolated page
+            EXPECTED: Page is downloaded through fixed proxy
+            RESULT:
+
+        4.2.1.6:
+            NAME: Isolated browser PAC URL proxy precedes WPAD
+            TEST: In host set PAC URL, set WPAD. WPAD should resolve to a different proxy than PAC URL. Start system,
+                start isolator navigate to isolated page
+            EXPECTED: Page is downloaded through proxy indicated by PAC URL
+            RESULT:
+    4.2.2:
+        NAME: Rating
+        LINKED_TESTS: 1.3.3.4
+
+        4.2.2.1:
+            NAME: Token is added for root requests
+            TEST: In normal browser navigate to isolated page.
+            EXPECTED: The page opens in the isolator. The request has header X-Fortinet-Browser-Protection set
+            RESULT:
+
+        4.2.2.2:
+            NAME: Token is added for subsequent requests
+            TEST: In normal browser navigate to isolated page. In the isolator then navigate by clicking link on page.
+            EXPECTED: The page opens in the isolator. All requests have header X-Fortinet-Browser-Protection set
+            RESULT:
+
+        4.2.2.3:
+            NAME: Token is added to tabs opened from root page
+            TEST: In normal browser navigate to isolated page. In isolator open any link on page in new tab (via right-click menu)
+            EXPECTED: The page opens in the isolator. All requests have header X-Fortinet-Browser-Protection set
+            RESULT:
+
+        4.2.2.4:
+            NAME: Navigation is disabled for tabs unrelated to a root isolation request
+            TEST: In normal browser navigate to isolated page. Try to open a new tab without using link, such as clicking
+                  the + new tab button. Try to navigate on that page
+            EXPECTED: Navigation is not allowed
+            RESULT:
+
+4.3:
+    NAME: Cross-platform performance
+    NOTES: Repeat for Windows 10 2004, 21H2, 22H2; Windows 11 23H2
+
+    4.3.1:
+        NAME: Isolator works with FNBI WSLg.
+        TEST: In fresh machine, install FNBI. Wait for the isolator to launch. Navigate to isolated URL
+        EXPECTED:
+            - Isolator launches, isolated browser renders correctly.
+            - Within isolator distro, after isolator launched, dir "/debian/mnt/wslg" contains subdir "logs"
+        RESULT:
+
+    4.3.2:
+        NAME: Isolator works with MSFT WSLg. Does not apply for 2004
+        TEST: In fresh machine, install FNBI. Ensure to stop the isolator. Run commands "wsl --update" and "wsl --shutdown".
+            Wait 8s. Restart FNBI GUI. Wait for the isolator to launch. Navigate to isolated URL
+        EXPECTED:
+            - Isolator launches, isolated browser renders correctly.
+            - Within isolator distro, after isolator launched, dir "/debian/mnt/wslg" contains subdir "distro"
+        RESULT:
+
+    4.3.3:
+        NAME: Sound is available with MSFT WSLG. Does not apply for 2004
+        TEST: In fresh machine, install FNBI. Ensure to stop the isolator. Run commands "wsl --update" and "wsl --shutdown".
+            Wait 8s. Restart FNBI GUI. Wait for the isolator to launch. Set to isolate youtube. Navigate to Youtube. Play any
+            video
+        EXPECTED:
+            - Isolator launches, isolated browser renders correctly.
+            - Within isolator distro, after isolator launched, dir "/debian/mnt/wslg" contains subdir "distro"
+            - The video sound can be heard (ensure to choose a video that actually has sound)
+        RESULT:

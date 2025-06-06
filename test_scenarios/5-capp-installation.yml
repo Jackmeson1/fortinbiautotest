@@ -1,0 +1,194 @@
+5.1:
+    NAME: INSTALLATION
+    NOTES: Run for every supported OS
+
+    5.1.1:
+        NAME: COMMON
+
+        5.1.1.1:
+            NAME: UPDATE
+            NOTES: All test cases should run in machine where FNBI was not previously installed unless otherwise specified
+
+            5.1.1.1.1:
+                NAME: Direct upgrade
+                TEST: Upload version X to FPX. In machine where system is not installed, navigate on a browser. Download 
+                    the installer provided in the intercept page, and install it. Once it runs, note the version in the 
+                    about page. In the same machine, manually run installer for version Y, where Y != X. Once the 
+                    installer completes, note the version in the about page
+                EXPECTED: The version should be Y
+                RESULT:
+
+            5.1.1.1.2:
+                NAME: First update when service was stopped. User app running
+                TEST: Install FNBI in a machine. Stop the FNBI service. Upload a new installer to FPX. Start the user app.
+                    Start the service.
+                EXPECTED: App update is triggered. The user is shown a progress bar.
+                RESULT:
+
+            5.1.1.1.3:
+                NAME: First update when service was running. User app running
+                TEST: Install FNBI in a machine. Start the FNBI service. Upload a new installer to FPX. Start the user app.
+                EXPECTED: Within 10m app update is triggered. The user is shown a progress bar.
+                RESULT:
+
+            5.1.1.1.4:
+                NAME: First update when service not was running. User app not running
+                TEST: Install FNBI in a machine. Start the FNBI service. Stop the user app and service. Upload a new
+                    installer to FPX. Start the service. Wait 4m. Start the user app
+                EXPECTED: A notification is shown that a restart is required.
+                RESULT:
+
+            5.1.1.1.5:
+                NAME: First restart after fist update
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app. Upload a new installer to FPX.
+                    Start the FNBI service and the user app. Restart the machine after installation completes.
+                EXPECTED: A notification that upgrade has completed is shown, including the version
+                RESULT:
+
+            5.1.1.1.6:
+                NAME: Second restart after fist update
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app. Upload a new installer to FPX.
+                    Start the FNBI service and the user app. Restart the machine after installation completes. Await for
+                    User App startup. Restart the machine
+                EXPECTED: User App starts, but no notification is shown
+                RESULT:
+
+            5.1.1.1.7:
+                NAME: Second update when service was stopped. User app running
+                TEST: Install FNBI in a machine. Stop the FNBI service. Upload a new installer to FPX. Start the user app.
+                    Start the service. After installation restart the machine. Stop the service and the user app. Upload
+                    a new installer to the FPX. Start the user app start the service
+                EXPECTED: App update is triggered. The user is shown a progress bar.
+                RESULT:
+
+            5.1.1.1.8:
+                NAME: Second update when service was running. User app running
+                TEST: Install FNBI in a machine. Stop the FNBI service. Upload a new installer to FPX. Start the user app.
+                    Start the service. After installation restart the machine. Start the service and the user app. Upload
+                    a new installer to the FPX.
+                EXPECTED: Within 10m app update is triggered. The user is shown a progress bar.
+                RESULT:
+
+            5.1.1.1.9:
+                NAME: Second update when service not was running. User app not running
+                TEST: Install FNBI in a machine. Stop the FNBI service. Upload a new installer to FPX. Start the user app.
+                    Start the service. After installation restart the machine. Start the service. Upload
+                    a new installer to the FPX. Wait 4m. Start the user app
+                EXPECTED: A notification is shown that a restart is required.
+                RESULT:
+
+            5.1.1.1.10:
+                NAME: First restart after second update
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app. Upload a new installer to FPX.
+                    Start the FNBI service and the user app. Restart the machine after installation is complete. Stop the
+                    service and the user app. Upload a new installer to the FPX. Start the FNBI service and the user app.
+                    Restart the machine after the installation is complete
+                EXPECTED: A notification that upgrade has completed is shown, including the version
+                RESULT:
+
+            5.1.1.1.11:
+                NAME: Second restart after second update
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app. Upload a new installer to FPX.
+                    Start the FNBI service and the user app. Restart the machine after installation is complete. Stop the
+                    service and the user app. Upload a new installer to the FPX. Start the FNBI service and the user app.
+                    Restart the machine after the installation
+                    is complete. Restart the machine again.
+                EXPECTED: User App starts, but no notification is shown
+                RESULT:
+
+            5.1.1.1.12:
+                NAME: Warning is shown for failed installation
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app.  Upload a corrupted
+                    installer to the FPX. Restart the machine after installation is complete. Start the service and the user
+                    app.
+                EXPECTED: A warning is shown to the user saying that the update failed
+                RESULT:
+
+            5.1.1.1.13:
+                NAME: User app hooks up to ongoing installation.
+                TEST: Install FNBI in a machine. Stop the FNBI service and the user app. Upload a new installer to FPX.
+                    Start the service. Wait 20s-30s (Strict!). Start the user app.
+                EXPECTED: The user app shows a progress bar for the update
+                RESULT:
+
+            5.1.1.1.14:
+                NAME: Upgrade does not overwrite configurations.
+                TEST: Install FNBI in a machine. Modify some setting (e.g. set manual detection mode, switch graphics 
+                        mode.) Stop the FNBI service and the user app. Upload a new installer to FPX. Start the 
+                        applications
+                EXPECTED: The previously set settings remain
+                RESULT:
+
+        5.1.1.2:
+            NAME: Fresh installation
+            TEST: On a machine that has never had the system installed, install the system.
+            EXPECTED: The service, and the user application are installed
+            RESULT:
+
+        5.1.1.3:
+            NAME: Re-installation
+            TEST: On a machine that had the system previously installed, uninstall the system. Install the system
+            EXPECTED: The service and the user application are installed
+            RESULT:
+
+
+        5.1.1.4:
+            NAME: Uninstaller is signed
+            TEST: Install FortiNBI. Run the uninstaller. If a confirmation message is shown where the publisher name
+                is displayed, the publisher name is Fortinet.
+
+    5.1.2:
+        NAME: WINDOWS
+        NOTES: Run on Win 10 and Win 11. One build each at minimum
+
+        5.1.2.1:
+            NAME: System installs .net runtime in a fresh machine
+            TEST: Run installer in a fresh machine
+            EXPECTED: The installer tries to install the .net runtime.
+            RESULT:
+
+        5.1.2.2:
+            NOTES: SKIP TEST
+            NAME: System skips install of .net runtime if already available
+            TEST: In a fresh machine install FNBI, uninstall it, install again.
+            EXPECTED: The second time installer skips the installation of the .net runtime.
+            RESULT:
+
+        5.1.2.3:
+            NAME: Installer warns of .net runtime installation failure
+            TEST: In a fresh computer without internet, but where winget is already installed. Install the system
+            EXPECTED: A warning is shown asking the user to install the .net runtime manually
+            RESULT:
+
+        5.1.2.4:
+            NAME: System installs the Windows App SDK runtime
+            TEST: Run installer in a fresh machine
+            EXPECTED: The installer tries to install the  Windows App SDK runtime
+            RESULT:
+
+        5.1.2.5:
+            NOTES: SKIP TEST
+            NAME: System skips install of  Windows App SDK runtime if already available
+            TEST: In a fresh machine install FNBI, uninstall it, install again.
+            EXPECTED: The second time installer skips the installation of the  Windows App SDK runtime
+            RESULT:
+
+        5.1.2.6:
+            NAME: Installer warns of Windows App SDK runtime installation failure
+            TEST: In a computer without internet, install the system
+            EXPECTED: A warning is shown asking the user to install the Windows App SDK runtime manually
+            RESULT:
+
+        5.1.2.7:
+            NAME: Auto update upgrades dependencies
+            TEST: Inquire with dev team about current dependencies and special installer. Upload special installer
+                    to FPX. Install FNBI with lower version than special installer.
+            EXPECTED: The required dependencies as specified by the dev team are installed along with the upgrade
+            RESULT:
+
+        5.1.2.8:
+          NAME: .NET and WinAppSDK Dependencies are installed even if already higher versions are already present
+          TEST: Ensure .NET and WinAppSDK are installed. Receive from dev, an FNBI installer which uses a lower version
+                of .NET and WinAppSDK. Install FNBI.
+          EXPECTED: The dependency versions required by FNBI are installed. The GUI is shown
+          RESULT:
