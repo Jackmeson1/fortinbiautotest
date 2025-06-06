@@ -24,6 +24,21 @@ pytest fnbi_tests/extension/test_installation.py::test_extension_installation
 
 The project uses a configuration file located at `config/config.yaml`. You can modify this file to change test parameters, paths, and other settings.
 
+### OpenAI API Key
+
+Some screenshot analysis tests rely on the OpenAI API. Set your API key in the
+`OPENAI_API_KEY` environment variable before running these tests. For example:
+
+```bash
+export OPENAI_API_KEY=<your key>
+```
+
+On Windows PowerShell use:
+
+```powershell
+$Env:OPENAI_API_KEY="<your key>"
+```
+
 ## Adding New Tests
 
 To add a new test:

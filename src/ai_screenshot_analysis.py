@@ -100,7 +100,7 @@ def analyze_screenshot(window_title, example_image_path, api_key, function_type)
         archive_old_runs()
 if __name__ == '__main__':
     # 使用示例
-    api_key = "sk-XDqRTRrsImefMErTQDJt2lyla2exNLY9UnDx6Z-uiTT3BlbkFJcv1Rv7iwR8YbvKaXPJo_gdgl5WYTW1mhBmnIIBpjkA"
+    api_key = os.getenv("OPENAI_API_KEY")
     window_title = "Chrome"
     example_image_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'resources', 'baseline_images', 'freeze_example.png')
     function_type = "freeze"
