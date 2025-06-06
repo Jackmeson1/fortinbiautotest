@@ -3,6 +3,7 @@ import pytest
 import logging
 import yaml
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -82,7 +83,9 @@ def test_isolate_navigation(browser, fnbi_app, fnbi_service):
         # Navigate to blank page first
         print("Navigating to blank page...")
         browser.navigate_to("about:blank")
-        time.sleep(2)  # Wait for plugin to load
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("Successfully navigated to blank page")
 
         # Get URL from config and attempt navigation
@@ -91,8 +94,9 @@ def test_isolate_navigation(browser, fnbi_app, fnbi_service):
         browser.navigate_to(isolate_url)
         print("Navigation attempted")
 
-        # Wait for isolation page to display
-        time.sleep(3)
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("\nTaking screenshot for AI analysis...")
 
         try:

@@ -5,6 +5,7 @@ import yaml
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
@@ -79,7 +80,9 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
     try:
         print("Navigating to blank page...")
         browser.navigate_to("about:blank")
-        time.sleep(2)
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("Successfully navigated to blank page")
 
         blocked_url = config['test']['blocked_url']
@@ -87,7 +90,9 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
         browser.navigate_to(blocked_url)
         print("Navigation attempted")
 
-        time.sleep(3)  # 给阻止页面显示的时间
+        WebDriverWait(browser.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "fnbi-block-page"))
+        )
         print("\nTaking screenshot for AI analysis...")
 
         try:

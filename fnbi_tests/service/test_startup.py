@@ -1,6 +1,9 @@
 import os
 import time
 import yaml
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import pytest
 
 from src.utils import wait_for_port, is_process_running, kill_process
@@ -83,7 +86,9 @@ def test_degraded_block_page_when_fpx_down(fnbi_service, fnbi_app):
     try:
         blocked_url = CONFIG['test']['blocked_url']
         browser.navigate_to(blocked_url)
-        time.sleep(3)
+        WebDriverWait(browser.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "fnbi-block-page"))
+        )
         assert browser.is_element_present("id", "fnbi-block-page"), (
             "Browser did not show block page with FPX down"
         )

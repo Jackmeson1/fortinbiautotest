@@ -6,6 +6,9 @@ import yaml
 from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import time
 
 # 设置日志记录
@@ -112,7 +115,9 @@ def test_allowed_navigation_after_block(browser, fnbi_app, fnbi_service):
 
     blocked_url = config['test']['blocked_url']
     browser.navigate_to(blocked_url)
-    time.sleep(2)  # Wait for potential block page to load
+    WebDriverWait(browser.driver, 10).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
 
     allowed_url = config['test']['allowed_url']
     browser.navigate_to(allowed_url)
