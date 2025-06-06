@@ -65,6 +65,27 @@ To generate an HTML test report:
 pytest --html=report.html
 ```
 
+## Visual State Identification
+
+Baseline screenshots in `resources/baseline_images` can be indexed using
+CLIP and FAISS. Build the index once with:
+
+```bash
+python -m src.visual_index
+```
+
+To classify the current application state based on a live screenshot:
+
+```python
+from src.screenshot_search import capture_and_search
+
+result = capture_and_search("Chrome", "freeze")
+print(result["best_match"])
+```
+
+Provide an `OPENAI_API_KEY` environment variable to enable the optional LLM
+disambiguation step when FAISS scores are very close.
+
 ## Troubleshooting
 
 If you encounter issues:
