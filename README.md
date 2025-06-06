@@ -52,6 +52,7 @@ pytest fnbi_tests/extension
 
 - For installation instructions, see [docs/installation.md](docs/installation.md)
 - For usage guidelines, see [docs/usage.md](docs/usage.md)
+- For architecture details, see [docs/architecture.md](docs/architecture.md)
 
 ## Contributing
 
