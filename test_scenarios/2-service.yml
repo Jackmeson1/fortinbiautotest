@@ -41,7 +41,7 @@
 2.2:
     NAME: FPX ADDR DETECTION
 
-    Note: The configuration file is now located at: C:\ProgramData\Fortinet\FortiNBI\application_state.json
+    Note: The configuration file is now located at: <FortiNBI installation directory>/application_state.json
 2.2.1: FPX ADDR PERSISTENCE
 2.2.1.1:
 NAME: Empty application_state.json

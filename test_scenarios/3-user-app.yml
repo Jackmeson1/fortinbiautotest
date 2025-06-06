@@ -687,14 +687,14 @@
       NAME: Isolator installation is cleaned up
       TEST: Ensure isolator is not installed. Start FPX. Start Service. Start user User App. Wait for installation to complete
       EXPECTED: After installation, .tar and .tar.gz files in %ALLUSERSPROFILE%/Fortinet/FortiNBI/fortinbi-isolator
-        and 'C:\\ProgramData/Fortinet/FortiNBI/fortinbi-isolator' are removed
+        and '<FortiNBI installation directory>/fortinbi-isolator' are removed
       RESULT:
     
     3.3.1.10:
       NAME: Isolator installation files are cleaned up if decompression fails
       TEST: Ensure isolator is not installed. Ensure compressed isolator image is corrupt. Start FPX. Start Service. Start user User App.
       EXPECTED: After error message, .tar and .tar.gz files in %ALLUSERSPROFILE%/Fortinet/FortiNBI/fortinbi-isolator
-        and 'C:\\ProgramData/Fortinet/FortiNBI/fortinbi-isolator' are removed
+        and '<FortiNBI installation directory>/fortinbi-isolator' are removed
       RESULT:
 
     3.3.1.11:

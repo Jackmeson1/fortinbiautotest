@@ -1,8 +1,15 @@
+# Example configuration for FortiNBI automated tests
+# Copy this file to config/config.yaml and adjust the paths for your environment.
 fnbi:
+  # Absolute path to the FortiNBI executable
   executable_path: "/path/to/FortiNBI/FortiNBI.exe"
+
 browser:
+  # Directory containing Chrome user data
   chrome_user_data_dir: "/path/to/Chrome/User Data"
+  # Name of the Chrome profile directory to use
   chrome_profile_directory: "Profile 1"
+
 test:
   allowed_url: "https://www.example.com"
   blocked_url: "https://www.dropbox.com"

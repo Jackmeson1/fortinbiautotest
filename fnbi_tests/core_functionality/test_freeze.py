@@ -2,7 +2,7 @@ import json
 import os
 import pytest
 import logging
-import yaml
+from src.utils import read_config
 from selenium.common.exceptions import WebDriverException
 
 from dotenv import load_dotenv
@@ -22,8 +22,7 @@ logger = logging.getLogger(__name__)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
 config_path = os.path.join(project_root, 'config', 'config.yaml')
-with open(config_path, 'r') as config_file:
-    config = yaml.safe_load(config_file)
+config = read_config(config_path)
 
 @pytest.fixture(scope="module")
 def browser():

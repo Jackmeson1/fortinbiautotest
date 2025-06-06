@@ -2,7 +2,7 @@ import os
 
 import pytest
 import logging
-import yaml
+from src.utils import read_config
 from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
@@ -20,8 +20,7 @@ project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
 # 构建配置文件的完整路径
 config_path = os.path.join(project_root, 'config', 'config.yaml')
 # 加载配置
-with open(config_path, 'r') as config_file:
-    config = yaml.safe_load(config_file)
+config = read_config(config_path)
 
 @pytest.fixture(scope="module")
 def browser():
