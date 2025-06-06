@@ -22,7 +22,7 @@ class FNBIApp:
         self.app = Application(backend="uia").start(self.app_path)
         logger.info(f"Application started with PID: {self.app.process}")
 
-        time.sleep(10)  # 给应用程序更多时间来启动所有组件
+        time.sleep(10)  # Give the application extra time to start all components
 
         self._connect_to_processes()
         self.find_main_window()
@@ -79,7 +79,7 @@ class FNBIApp:
             except Exception as e:
                 logger.error(f"Error checking isolator status: {e}")
 
-        # 检查 WSL 状态
+        # Check the WSL status
         try:
             result = subprocess.run(["wsl", "-l", "-v"], capture_output=True, text=True)
             for line in result.stdout.splitlines():
@@ -126,7 +126,7 @@ class FNBIApp:
         return "Status not available"
 
     def close(self):
-        # 首先尝试优雅地关闭主窗口
+        # First attempt to close the main window gracefully
         if self.main_window and self.main_window.exists():
             try:
                 self.main_window.close()
@@ -134,10 +134,10 @@ class FNBIApp:
             except Exception as e:
                 logger.error(f"Error closing main window: {e}")
 
-        # 等待一段时间，让应用有机会自行关闭
+        # Wait briefly to give the app a chance to exit on its own
         time.sleep(5)
 
-        # 只关闭 FortiNBI.exe 和 FortiNBIGui.exe
+        # Only close FortiNBI.exe and FortiNBIGui.exe
         processes_to_close = ["FortiNBI.exe", "FortiNBIGui.exe"]
         for proc in psutil.process_iter(["name", "pid"]):
             if proc.info["name"] in processes_to_close:
@@ -152,7 +152,7 @@ class FNBIApp:
                         f"Error terminating {proc.info['name']} (PID: {proc.info['pid']}): {e}"
                     )
 
-        # 等待进程终止
+        # Wait for the processes to terminate
         def wait_for_processes(timeout=10):
             end_time = time.time() + timeout
             while time.time() < end_time:
@@ -181,7 +181,7 @@ class FNBIApp:
                             f"Error killing {proc.info['name']} (PID: {proc.info['pid']}): {e}"
                         )
 
-        # 关闭 isolator
+        # Shut down the isolator
         if self.is_isolator_running():
             try:
                 subprocess.run(["wsl", "--terminate", "fortinbi-isolator"], check=True)
@@ -189,12 +189,12 @@ class FNBIApp:
             except subprocess.CalledProcessError as e:
                 logger.error(f"Error terminating fortinbi-isolator: {e}")
 
-        # 重置相关类属性
+        # Reset related class attributes
         self.app = None
         self.gui_app = None
         self.main_window = None
 
-        # 记录 FortiNBIService.exe 的状态
+        # Log the status of FortiNBIService.exe
         service_running = any(
             proc.info["name"] == "FortiNBIService.exe"
             for proc in psutil.process_iter(["name"])

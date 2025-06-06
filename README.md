@@ -4,11 +4,17 @@ This project contains automated tests for the FortiNBI application.
 
 ## Project Structure
 
-- `src/`: Contains utility modules for interacting with FNBI components
-- `fnbi_tests/`: Contains all automated test modules
-- `config/`: Contains configuration files
-- `docs/`: Contains project documentation
-- `scripts/`: Contains utility scripts for running tests and setting up the environment
+The repository is organised into the following top-level directories:
+
+- `src/` – Core helper modules such as `BrowserControl`, `FNBIApp` and `FNBIService`
+- `fnbi_tests/` – Automated test suites grouped by feature area
+- `tests/` – Unit tests for the helper modules
+- `config/` – YAML configuration files
+- `resources/` – Baseline images and other static assets
+- `mocks/` – Mock web pages and a simple HTTP server used during testing
+- `scripts/` – Helper scripts for running and managing tests
+- `docs/` – Additional project documentation
+- `test_scenarios/` and `testcases/` – YAML files describing manual and automated scenarios
 
 ## Setup
 

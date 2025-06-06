@@ -23,13 +23,13 @@ from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
 
-# 设置日志记录
+# Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-# 加载配置
+# Load configuration
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
@@ -61,7 +61,7 @@ def fnbi_app():
     if not app.is_running():
         app.start()
     yield app
-    # 不在这里停止应用，让它继续运行
+    # Do not stop the application here; let it keep running
 
 
 @pytest.fixture(scope="module")
@@ -71,7 +71,7 @@ def fnbi_service():
     if not service.is_running():
         service.start()
     yield service
-    # 不在这里停止服务，让它继续运行
+    # Do not stop the service here; let it keep running
 
 
 def get_page_content(browser):
@@ -83,9 +83,7 @@ def get_page_content(browser):
 
 @pytest.mark.dependency()
 def test_system_setup(fnbi_app, fnbi_service):
-    """
-    确保 FNBI 服务和应用正在运行，以便继续进行其他测试
-    """
+    """Ensure FNBI service and application are running so other tests can proceed."""
     assert fnbi_service.is_running(), "FNBI service is not running"
     assert fnbi_app.is_running(), "FNBI application is not running"
 
