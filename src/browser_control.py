@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import logging
+import psutil
 
 logger = logging.getLogger(__name__)
 
@@ -100,3 +101,27 @@ class BrowserControl:
                 pass
             time.sleep(0.5)
         return False
+
+    def is_wsl_sandbox_opened(self):
+        """Return True if a WSL based sandbox browser appears to be running."""
+        for proc in psutil.process_iter(["name", "cmdline"]):
+            try:
+                name = (proc.info.get("name") or "").lower()
+                cmd = " ".join(proc.info.get("cmdline") or []).lower()
+                if "wsl" in name or "wsl" in cmd:
+                    if any(br in name for br in ["chrome", "msedge", "firefox"]):
+                        return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        return False
+
+    def verify_isolation(self):
+        """Check the current page for indicators that it is isolated."""
+        try:
+            title = (self.driver.title or "").lower()
+            source = (self.driver.page_source or "").lower()
+        except WebDriverException:
+            return False
+
+        keywords = ["isolation", "sandbox", "forti", "secure"]
+        return any(k in title or k in source for k in keywords)
