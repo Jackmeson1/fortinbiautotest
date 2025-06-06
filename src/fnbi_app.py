@@ -108,10 +108,6 @@ class FNBIApp:
             return "\n".join(statuses)
         return "Status not available"
 
-    import psutil
-    import time
-    import subprocess
-
     def close(self):
         # 首先尝试优雅地关闭主窗口
         if self.main_window and self.main_window.exists():
