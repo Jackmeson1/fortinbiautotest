@@ -102,6 +102,7 @@ class BrowserControl:
             time.sleep(0.5)
         return False
 
+
     def is_wsl_sandbox_opened(self):
         """Return True if a WSL based sandbox browser appears to be running."""
         for proc in psutil.process_iter(["name", "cmdline"]):
@@ -125,3 +126,4 @@ class BrowserControl:
 
         keywords = ["isolation", "sandbox", "forti", "secure"]
         return any(k in title or k in source for k in keywords)
+
