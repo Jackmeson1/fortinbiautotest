@@ -2,6 +2,15 @@
 
 ## Running Tests
 
+Before running the tests, start the local HTTP server that serves the sample
+web pages used during testing:
+
+```bash
+python mocks/simple_http_server.py
+```
+
+Leave this server running in the background while executing the tests.
+
 To run all tests:
 
 ```
