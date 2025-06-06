@@ -1,8 +1,9 @@
-import psutil
-from pywinauto import Application
-import time
 import logging
 import subprocess
+import time
+
+import psutil
+from pywinauto import Application
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -28,17 +29,27 @@ class FNBIApp:
         self.print_window_info()
 
     def _connect_to_processes(self):
-        for proc in psutil.process_iter(['name', 'pid']):
+        for proc in psutil.process_iter(["name", "pid"]):
             try:
-                if proc.info['name'] == 'FortiNBI.exe':
-                    self.app = Application(backend="uia").connect(process=proc.info['pid'], timeout=20)
-                    logger.info(f"Connected to FortiNBI.exe with PID: {proc.info['pid']}")
-                elif proc.info['name'] == 'FortiNBIGui.exe':
-                    self.gui_app = Application(backend="uia").connect(process=proc.info['pid'], timeout=20)
-                    logger.info(f"Connected to FortiNBIGui.exe with PID: {proc.info['pid']}")
-                elif proc.info['name'] == 'FortiNBIService.exe':
-                    self.service_pid = proc.info['pid']
-                    logger.info(f"FortiNBIService.exe found with PID: {self.service_pid}")
+                if proc.info["name"] == "FortiNBI.exe":
+                    self.app = Application(backend="uia").connect(
+                        process=proc.info["pid"], timeout=20
+                    )
+                    logger.info(
+                        f"Connected to FortiNBI.exe with PID: {proc.info['pid']}"
+                    )
+                elif proc.info["name"] == "FortiNBIGui.exe":
+                    self.gui_app = Application(backend="uia").connect(
+                        process=proc.info["pid"], timeout=20
+                    )
+                    logger.info(
+                        f"Connected to FortiNBIGui.exe with PID: {proc.info['pid']}"
+                    )
+                elif proc.info["name"] == "FortiNBIService.exe":
+                    self.service_pid = proc.info["pid"]
+                    logger.info(
+                        f"FortiNBIService.exe found with PID: {self.service_pid}"
+                    )
             except Exception as e:
                 logger.error(f"Error connecting to {proc.info['name']}: {e}")
 
@@ -53,12 +64,16 @@ class FNBIApp:
                 except Exception as e:
                     logger.error(f"Error finding window in {app.process}: {e}")
 
-        logger.warning("Could not find main window in any of the connected applications")
+        logger.warning(
+            "Could not find main window in any of the connected applications"
+        )
 
     def is_isolator_running(self):
         if self.main_window:
             try:
-                isolator_status = self.main_window.child_window(title="Isolator").window_text()
+                isolator_status = self.main_window.child_window(
+                    title="Isolator"
+                ).window_text()
                 logger.info(f"Isolator status: {isolator_status}")
                 return "Running" in isolator_status
             except Exception as e:
@@ -104,7 +119,9 @@ class FNBIApp:
     def get_status(self):
         if self.main_window:
             status_items = self.main_window.children(control_type="Text")
-            statuses = [item.window_text() for item in status_items if item.window_text()]
+            statuses = [
+                item.window_text() for item in status_items if item.window_text()
+            ]
             return "\n".join(statuses)
         return "Status not available"
 
@@ -121,35 +138,48 @@ class FNBIApp:
         time.sleep(5)
 
         # 只关闭 FortiNBI.exe 和 FortiNBIGui.exe
-        processes_to_close = ['FortiNBI.exe', 'FortiNBIGui.exe']
-        for proc in psutil.process_iter(['name', 'pid']):
-            if proc.info['name'] in processes_to_close:
+        processes_to_close = ["FortiNBI.exe", "FortiNBIGui.exe"]
+        for proc in psutil.process_iter(["name", "pid"]):
+            if proc.info["name"] in processes_to_close:
                 try:
-                    p = psutil.Process(proc.info['pid'])
+                    p = psutil.Process(proc.info["pid"])
                     p.terminate()
-                    logger.info(f"Terminated {proc.info['name']} (PID: {proc.info['pid']})")
+                    logger.info(
+                        f"Terminated {proc.info['name']} (PID: {proc.info['pid']})"
+                    )
                 except Exception as e:
-                    logger.error(f"Error terminating {proc.info['name']} (PID: {proc.info['pid']}): {e}")
+                    logger.error(
+                        f"Error terminating {proc.info['name']} (PID: {proc.info['pid']}): {e}"
+                    )
 
         # 等待进程终止
         def wait_for_processes(timeout=10):
             end_time = time.time() + timeout
             while time.time() < end_time:
-                if not any(proc.info['name'] in processes_to_close for proc in psutil.process_iter(['name'])):
+                if not any(
+                    proc.info["name"] in processes_to_close
+                    for proc in psutil.process_iter(["name"])
+                ):
                     return True
                 time.sleep(0.5)
             return False
 
         if not wait_for_processes():
-            logger.warning("Some processes did not terminate gracefully. Forcing termination.")
-            for proc in psutil.process_iter(['name', 'pid']):
-                if proc.info['name'] in processes_to_close:
+            logger.warning(
+                "Some processes did not terminate gracefully. Forcing termination."
+            )
+            for proc in psutil.process_iter(["name", "pid"]):
+                if proc.info["name"] in processes_to_close:
                     try:
-                        p = psutil.Process(proc.info['pid'])
+                        p = psutil.Process(proc.info["pid"])
                         p.kill()
-                        logger.info(f"Forcefully killed {proc.info['name']} (PID: {proc.info['pid']})")
+                        logger.info(
+                            f"Forcefully killed {proc.info['name']} (PID: {proc.info['pid']})"
+                        )
                     except Exception as e:
-                        logger.error(f"Error killing {proc.info['name']} (PID: {proc.info['pid']}): {e}")
+                        logger.error(
+                            f"Error killing {proc.info['name']} (PID: {proc.info['pid']}): {e}"
+                        )
 
         # 关闭 isolator
         if self.is_isolator_running():
@@ -165,10 +195,15 @@ class FNBIApp:
         self.main_window = None
 
         # 记录 FortiNBIService.exe 的状态
-        service_running = any(proc.info['name'] == 'FortiNBIService.exe' for proc in psutil.process_iter(['name']))
+        service_running = any(
+            proc.info["name"] == "FortiNBIService.exe"
+            for proc in psutil.process_iter(["name"])
+        )
         if service_running:
             logger.info("FortiNBIService.exe is still running as intended")
         else:
-            logger.warning("FortiNBIService.exe is not running. This might be unexpected.")
+            logger.warning(
+                "FortiNBIService.exe is not running. This might be unexpected."
+            )
 
         logger.info("FNBI components (except service) have been closed")
