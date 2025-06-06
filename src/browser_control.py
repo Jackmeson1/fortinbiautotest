@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.edge.options import Options as EdgeOptions
 import logging
 import psutil
 
@@ -25,6 +26,19 @@ class BrowserControl:
                 self.driver = webdriver.Chrome(options=chrome_options)
             except Exception as e:
                 logger.error(f"Failed to initialize Chrome driver: {e}")
+                raise
+        elif browser_type == "edge":
+            edge_options = EdgeOptions()
+            if user_data_dir:
+                logger.info(f"Using Edge user data directory: {user_data_dir}")
+                edge_options.add_argument(f"user-data-dir={user_data_dir}")
+            if profile_directory:
+                logger.info(f"Using Edge profile directory: {profile_directory}")
+                edge_options.add_argument(f"profile-directory={profile_directory}")
+            try:
+                self.driver = webdriver.Edge(options=edge_options)
+            except Exception as e:
+                logger.error(f"Failed to initialize Edge driver: {e}")
                 raise
         elif browser_type == "firefox":
             try:
