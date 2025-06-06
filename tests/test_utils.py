@@ -1,11 +1,13 @@
 import os
 import logging
+import pytest
 from src.utils import take_window_screenshot, compare_images_ssim
 
 # 设置日志记录
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+@pytest.mark.skip(reason="Requires GUI environment")
 def test_take_window_screenshot():
     """
     测试 take_window_screenshot 函数。
@@ -33,8 +35,9 @@ def test_compare_images_ssim():
     """
     try:
         # 定义图片路径
-        reference_image_path = "reference_image.png"
-        screenshot_path = "test_screenshot.png"
+        base_dir = os.path.dirname(__file__)
+        reference_image_path = os.path.join(base_dir, "reference_image.png")
+        screenshot_path = os.path.join(base_dir, "test_screenshot.png")
 
         # 确保参考图片存在
         if not os.path.exists(reference_image_path):
@@ -51,7 +54,3 @@ def test_compare_images_ssim():
     except Exception as e:
         logging.error(f"test_compare_images_ssim failed: {e}")
 
-if __name__ == "__main__":
-    # 运行测试
-    test_take_window_screenshot()
-    test_compare_images_ssim()
