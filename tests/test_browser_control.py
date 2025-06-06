@@ -6,6 +6,11 @@ from selenium.webdriver.common.keys import Keys
 
 from src.browser_control import BrowserControl
 
+from src.utils import read_config
+import os
+import logging
+
+
 # 设置日志记录
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -16,9 +21,16 @@ logger = logging.getLogger(__name__)
 @pytest.fixture(scope="module")
 def browser():
     logger.info("Setting up BrowserControl")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(current_dir, '..'))
+    config_path = os.path.join(project_root, 'config', 'config.yaml')
+    cfg = read_config(config_path)
     control = BrowserControl(
-        profile_path=r"C:\Users\test\AppData\Local\Google\Chrome\User Data\Default"
-    )  # 替换为实际路径
+        user_data_dir=cfg['browser']['chrome_user_data_dir'],
+        profile_directory=cfg['browser']['chrome_profile_directory']
+    )
+
     yield control
     logger.info("Tearing down BrowserControl")
     control.close()

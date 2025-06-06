@@ -4,13 +4,22 @@ import pytest
 
 from src.fnbi_app import FNBIApp
 
+from src.utils import read_config
+import os
+import logging
+
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
 def fnbi_app():
-    app = FNBIApp(r"C:\Program Files (x86)\Fortinet\FortiNBI\FortiNBI.exe")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(current_dir, '..'))
+    config_path = os.path.join(project_root, 'config', 'config.yaml')
+    cfg = read_config(config_path)
+    app = FNBIApp(cfg['fnbi']['executable_path'])
     try:
         app.start()
         yield app

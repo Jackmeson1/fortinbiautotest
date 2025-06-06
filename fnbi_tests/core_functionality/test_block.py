@@ -5,8 +5,9 @@ import time
 
 import pytest
 
-import yaml
-from urllib.parse import urlparse
+import logging
+from src.utils import read_config
+
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -27,10 +28,11 @@ logger = logging.getLogger(__name__)
 
 # 加载配置
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-config_path = os.path.join(project_root, "config", "config.yaml")
-with open(config_path, "r") as config_file:
-    config = yaml.safe_load(config_file)
+
+project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
+config_path = os.path.join(project_root, 'config', 'config.yaml')
+config = read_config(config_path)
+
 
 
 @pytest.fixture(scope="module")

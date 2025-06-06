@@ -1,7 +1,7 @@
 import os
 import time
 
-
+from src.utils import read_config
 
 import pytest
 import yaml
@@ -11,10 +11,10 @@ from src.utils import is_process_running, kill_process, wait_for_port
 
 # Load configuration for test URLs
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-config_path = os.path.join(project_root, "config", "config.yaml")
-with open(config_path, "r") as cfg_file:
-    CONFIG = yaml.safe_load(cfg_file)
+
+project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
+config_path = os.path.join(project_root, 'config', 'config.yaml')
+CONFIG = read_config(config_path)
 
 
 def stop_mock_fpx():

@@ -1,21 +1,31 @@
+
+import os
+import unittest
+
 import time
 
 import unittest
 
 
 import psutil  # You'll need to install this package: pip install psutil
-from selenium import webdriver
+
+from src.utils import read_config
+
 
 
 class TestBrowserIsolation(unittest.TestCase):
     def setUp(self):
         """Initialize WebDriver before each test case."""
-        option = webdriver.ChromeOptions()
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, '..'))
+        config_path = os.path.join(project_root, 'config', 'config.yaml')
+        config = read_config(config_path)
 
-        option.add_argument(
-            r"--user-data-dir=" + r"C:\Users\test\AppData\Local\Google\Chrome\User Data"
-        )
-        option.add_argument(r"--profile-directory=Profile 3")
+
+        option = webdriver.ChromeOptions()
+        option.add_argument(f"--user-data-dir={config['browser']['chrome_user_data_dir']}")
+        option.add_argument(f"--profile-directory={config['browser']['chrome_profile_directory']}")
+
         self.driver = webdriver.Chrome(options=option)
 
     def tearDown(self):

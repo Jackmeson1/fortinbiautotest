@@ -1,7 +1,7 @@
 fnbi:
-  executable_path: "C:\\Program Files (x86)\\Fortinet\\FortiNBI\\FortiNBI.exe"
+  executable_path: "/path/to/FortiNBI/FortiNBI.exe"
 browser:
-  chrome_user_data_dir: "C:\\Users\\test\\AppData\\Local\\Google\\Chrome\\User Data"
+  chrome_user_data_dir: "/path/to/Chrome/User Data"
   chrome_profile_directory: "Profile 1"
 test:
   allowed_url: "http://localhost:8000/allowed.html"

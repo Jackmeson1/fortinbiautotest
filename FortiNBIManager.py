@@ -1,7 +1,10 @@
 import subprocess
 
 import psutil
-import time
+
+from src.utils import read_config
+import os
+
 
 
 class FortiNBIManager:
@@ -52,15 +55,18 @@ class FortiNBIManager:
 if __name__ == "__main__":
     manager = FortiNBIManager()
 
-    # \u66ff\u6362\u6210\u4f60\u7684 FortiNBI.exe \u7684\u5b8c\u6574\u8def\u5f84
-    path_to_forti_nbi = r"C:\\Program Files (x86)\\Fortinet\\FortiNBI\\FortiNBI.exe"
+    project_root = os.path.abspath(os.path.dirname(__file__))
+    config_path = os.path.join(project_root, 'config', 'config.yaml')
+    cfg = read_config(config_path)
 
 
     proc = None
     if not manager.is_process_running('FortiNBI.exe'):
 
         print("FortiNBI.exe is not running. Starting it now...")
-        proc = manager.start_process(path_to_forti_nbi)
+
+        manager.start_process(cfg['fnbi']['executable_path'])
+
     else:
         print("FortiNBI.exe is already running.")
 

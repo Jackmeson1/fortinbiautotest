@@ -1,20 +1,27 @@
-import time
+
+import os
+
 import unittest
 
 import time
-from selenium import webdriver
-from urllib.parse import urlparse
+
+from src.utils import read_config
 
 
 class TestBlock(unittest.TestCase):
 
     def setUp(self):
         # Replace with the path to your own Chromedriver
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(current_dir, '..'))
+        config_path = os.path.join(project_root, 'config', 'config.yaml')
+        config = read_config(config_path)
+
         options = webdriver.ChromeOptions()
-        options.add_argument(r"--profile-directory=Profile 3")
-        options.add_argument(
-            r"--user-data-dir=" + r"C:\Users\test\AppData\Local\Google\Chrome\User Data"
-        )
+
+        options.add_argument(f"--profile-directory={config['browser']['chrome_profile_directory']}")
+        options.add_argument(f"--user-data-dir={config['browser']['chrome_user_data_dir']}")
+
         self.driver = webdriver.Chrome(options=options)
 
     def test_block(self):

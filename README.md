@@ -18,7 +18,9 @@ This project contains automated tests for the FortiNBI application.
    - Windows: `venv\Scripts\activate`
    - Unix or MacOS: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
-5. Install pre-commit hooks: `pre-commit install`
+
+5. Copy `config/config.yaml.example` to `config/config.yaml` and edit the paths for your environment
+
 
 ## Running Tests
 
