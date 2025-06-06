@@ -1,7 +1,18 @@
+import ctypes
+import logging
+import os
+import shutil
 import subprocess
 import time
+from ctypes import wintypes
+from datetime import datetime
+from io import BytesIO
 
+import numpy as np
 import psutil
+import yaml
+from PIL import Image
+from skimage.metrics import structural_similarity as ssim
 
 
 def is_process_running(process_name):
@@ -37,21 +48,9 @@ def check_file_exists(file_path):
 
 def read_config(config_file):
     """Read a YAML configuration file."""
-    import yaml
-
     with open(config_file, "r") as file:
         return yaml.safe_load(file)
 
-
-# /src/utils.py
-
-import logging
-import os
-from io import BytesIO
-
-import numpy as np
-from PIL import Image
-from skimage.metrics import structural_similarity as ssim
 
 try:  # Optional Windows-specific dependencies
     import pygetwindow as gw
@@ -65,10 +64,6 @@ except Exception:  # pragma: no cover - non-Windows environment
     win32ui = None
     win32con = None
     win32api = None
-
-
-import ctypes
-from ctypes import wintypes
 
 
 def take_window_screenshot(window_title, save_dir, function_type):
@@ -167,12 +162,6 @@ def compare_images_ssim(reference_path, screenshot_path):
 
     score = ssim(ref_arr, scr_arr)
     return float(score)
-
-
-import logging
-import os
-import shutil
-from datetime import datetime
 
 
 def create_run_directory():
