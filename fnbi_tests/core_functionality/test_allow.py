@@ -1,6 +1,5 @@
-import os
-
 import pytest
+
 import logging
 import yaml
 from src.browser_control import BrowserControl
@@ -126,6 +125,8 @@ def test_allowed_navigation_after_block(browser, fnbi_app, fnbi_service):
     assert browser.is_element_present("tag name", "body"), "Page body is missing"
     assert not browser.is_element_present("id", "fnbi-block-page"), "FNBI block page was unexpectedly present"
 
-    logger.info("test_allowed_navigation_after_block completed successfully")
+CASES = [c for c in load_test_cases() if c['verdict'] == 'allow']
 
-# Add more test cases as needed
+@pytest.mark.parametrize("url,expected", [(c['url'], c['verdict']) for c in CASES])
+def test_allow(url, expected):
+    assert get_verdict_for_url(url) == expected

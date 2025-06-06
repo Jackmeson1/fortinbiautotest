@@ -1,6 +1,5 @@
-import json
-import os
 import pytest
+
 import logging
 import yaml
 from selenium.common.exceptions import WebDriverException
@@ -8,8 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-from dotenv import load_dotenv
-load_dotenv()
+
+CASES = [c for c in load_test_cases() if c['verdict'] == 'freeze']
 
 from src.ai_screenshot_analysis import analyze_screenshot
 from src.browser_control import BrowserControl
@@ -128,3 +127,4 @@ def test_freeze_navigation(browser, fnbi_app, fnbi_service):
         raise
 
     print("\n=== Test completed successfully ===")
+

@@ -1,5 +1,5 @@
-import os
 import pytest
+
 import logging
 import yaml
 from selenium.common.exceptions import WebDriverException
@@ -7,11 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 load_dotenv()
 
-from src.ai_screenshot_analysis import analyze_screenshot
-from src.browser_control import BrowserControl
-from src.fnbi_app import FNBIApp
-from src.fnbi_service import FNBIService
-import time
+
+CASES = [c for c in load_test_cases() if c['verdict'] == 'isolate']
+
 
 # 设置日志记录
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

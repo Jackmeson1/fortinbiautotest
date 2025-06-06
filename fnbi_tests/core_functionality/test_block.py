@@ -1,5 +1,5 @@
-import os
 import pytest
+
 import logging
 import yaml
 from selenium.common.exceptions import WebDriverException
@@ -11,9 +11,8 @@ from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
 import time
 
-# 设置日志记录
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+
+CASES = [c for c in load_test_cases() if c['verdict'] == 'block']
 
 # 加载配置
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -131,3 +130,4 @@ def test_system_setup(fnbi_app, fnbi_service):
     """
     assert fnbi_service.is_running(), "FNBI service is not running"
     assert fnbi_app.is_running(), "FNBI application is not running"
+
