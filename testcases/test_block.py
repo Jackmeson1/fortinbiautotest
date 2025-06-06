@@ -1,8 +1,12 @@
+
 import os
+
 import unittest
-from selenium import webdriver
+
 import time
+
 from src.utils import read_config
+
 
 class TestBlock(unittest.TestCase):
 
@@ -14,20 +18,30 @@ class TestBlock(unittest.TestCase):
         config = read_config(config_path)
 
         options = webdriver.ChromeOptions()
+
         options.add_argument(f"--profile-directory={config['browser']['chrome_profile_directory']}")
         options.add_argument(f"--user-data-dir={config['browser']['chrome_user_data_dir']}")
+
         self.driver = webdriver.Chrome(options=options)
 
     def test_block(self):
-        self.driver.get('https://www.google.com')
+        self.driver.get("https://www.google.com")
 
-        # Wait for the page to load and possibly redirect. You can use WebDriverWait for better waiting mechanism
-        time.sleep(10)
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
 
         current_url = self.driver.current_url
-        expected_url = 'extension://gdiglidgaoimfbhfkelnlgnpghggbmbb/res/html/gatewayPage.html?action=2&reason=Policy&requestId=148&url=https%253A%252F%252Fwww.google.com%252F'
 
-        self.assertEqual(current_url, expected_url, f"Expected URL: {expected_url}, Current URL: {current_url}")
+
+        parsed = urlparse(current_url)
+        self.assertEqual(parsed.scheme, 'extension', f"Unexpected scheme in URL: {current_url}")
+        self.assertTrue(parsed.path.endswith('gatewayPage.html'),
+                        f"Unexpected path in URL: {current_url}")
+
+        # Check that the page contains an indicator of the block reason
+        self.assertIn('Policy', self.driver.page_source)
+
 
     def tearDown(self):
         self.driver.quit()

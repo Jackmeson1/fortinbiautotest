@@ -1,6 +1,6 @@
 import os
-import sys
 import subprocess
+import sys
 from unittest import mock
 
 
@@ -47,15 +47,23 @@ def test_fresh_installation(mock_open, mock_makedirs, mock_run, tmp_path):
     assert old_version is None
     mock_run.assert_called_once_with([str(installer), "/quiet"], check=True)
     mock_makedirs.assert_called_once_with(str(install_dir), exist_ok=True)
-    mock_open.assert_called_once_with(os.path.join(str(install_dir), "version.txt"), "w")
-    mock_winreg.CreateKey.assert_called_once_with(mock_winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\FortiNBI")
-    mock_winreg.SetValueEx.assert_called_once_with(mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0")
+    mock_open.assert_called_once_with(
+        os.path.join(str(install_dir), "version.txt"), "w"
+    )
+    mock_winreg.CreateKey.assert_called_once_with(
+        mock_winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\FortiNBI"
+    )
+    mock_winreg.SetValueEx.assert_called_once_with(
+        mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0"
+    )
 
 
 @mock.patch("subprocess.run")
 @mock.patch("os.makedirs")
 @mock.patch("builtins.open", new_callable=mock.mock_open)
-def test_reinstallation_over_existing_setup(mock_open, mock_makedirs, mock_run, tmp_path):
+def test_reinstallation_over_existing_setup(
+    mock_open, mock_makedirs, mock_run, tmp_path
+):
     """Reinstallation over an existing setup."""
     mock_winreg = mock.MagicMock()
     mock_winreg.HKEY_LOCAL_MACHINE = mock.sentinel.hklm
@@ -72,14 +80,20 @@ def test_reinstallation_over_existing_setup(mock_open, mock_makedirs, mock_run, 
     assert old_version == "1.0.0"
     mock_run.assert_called_once_with([str(installer), "/quiet"], check=True)
     mock_makedirs.assert_called_once_with(str(install_dir), exist_ok=True)
-    mock_open.assert_called_once_with(os.path.join(str(install_dir), "version.txt"), "w")
-    mock_winreg.SetValueEx.assert_called_once_with(mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0")
+    mock_open.assert_called_once_with(
+        os.path.join(str(install_dir), "version.txt"), "w"
+    )
+    mock_winreg.SetValueEx.assert_called_once_with(
+        mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0"
+    )
 
 
 @mock.patch("subprocess.run")
 @mock.patch("os.makedirs")
 @mock.patch("builtins.open", new_callable=mock.mock_open)
-def test_direct_upgrade_from_older_version(mock_open, mock_makedirs, mock_run, tmp_path):
+def test_direct_upgrade_from_older_version(
+    mock_open, mock_makedirs, mock_run, tmp_path
+):
     """Direct upgrade from an older version."""
     mock_winreg = mock.MagicMock()
     mock_winreg.HKEY_LOCAL_MACHINE = mock.sentinel.hklm
@@ -96,5 +110,9 @@ def test_direct_upgrade_from_older_version(mock_open, mock_makedirs, mock_run, t
     assert old_version == "0.9.0"
     mock_run.assert_called_once_with([str(installer), "/quiet"], check=True)
     mock_makedirs.assert_called_once_with(str(install_dir), exist_ok=True)
-    mock_open.assert_called_once_with(os.path.join(str(install_dir), "version.txt"), "w")
-    mock_winreg.SetValueEx.assert_called_once_with(mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0")
+    mock_open.assert_called_once_with(
+        os.path.join(str(install_dir), "version.txt"), "w"
+    )
+    mock_winreg.SetValueEx.assert_called_once_with(
+        mock.sentinel.key, "Version", 0, mock_winreg.REG_SZ, "1.0.0"
+    )

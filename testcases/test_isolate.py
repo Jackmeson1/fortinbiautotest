@@ -1,9 +1,16 @@
+
 import os
 import unittest
+
 import time
-from selenium import webdriver
+
+import unittest
+
+
 import psutil  # You'll need to install this package: pip install psutil
+
 from src.utils import read_config
+
 
 
 class TestBrowserIsolation(unittest.TestCase):
@@ -14,9 +21,11 @@ class TestBrowserIsolation(unittest.TestCase):
         config_path = os.path.join(project_root, 'config', 'config.yaml')
         config = read_config(config_path)
 
+
         option = webdriver.ChromeOptions()
         option.add_argument(f"--user-data-dir={config['browser']['chrome_user_data_dir']}")
         option.add_argument(f"--profile-directory={config['browser']['chrome_profile_directory']}")
+
         self.driver = webdriver.Chrome(options=option)
 
     def tearDown(self):
@@ -33,15 +42,16 @@ class TestBrowserIsolation(unittest.TestCase):
             # Navigate to YouTube Canada site
             self.driver.get(r"https:\\www.dropbox.com")
 
-            # Sleep for 3 seconds to allow the site to load
-            time.sleep(10)
+            WebDriverWait(self.driver, 20).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
 
             # Assert if an RDP process exists in Windows processes
             rdp_exist = False
 
-            for proc in psutil.process_iter(['name']):
-                print(proc.info['name'].lower())
-                if 'rdp' in proc.info['name'].lower():
+            for proc in psutil.process_iter(["name"]):
+                print(proc.info["name"].lower())
+                if "rdp" in proc.info["name"].lower():
                     rdp_exist = True
                     break
 
@@ -52,5 +62,5 @@ class TestBrowserIsolation(unittest.TestCase):
             self.fail(f"Test failed due to {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

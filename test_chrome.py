@@ -8,9 +8,11 @@ import os
 # 创建 ChromeOptions 实例
 chrome_options = Options()
 
+
 project_root = os.path.abspath(os.path.dirname(__file__))
 config_path = os.path.join(project_root, 'config', 'config.yaml')
 cfg = read_config(config_path)
+
 
 chrome_options.add_argument(f"user-data-dir={cfg['browser']['chrome_user_data_dir']}")
 chrome_options.add_argument(f"profile-directory={cfg['browser']['chrome_profile_directory']}")
