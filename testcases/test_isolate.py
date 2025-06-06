@@ -1,5 +1,6 @@
 import unittest
 import time
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium import webdriver
 import psutil  # You'll need to install this package: pip install psutil
 
@@ -27,8 +28,9 @@ class TestBrowserIsolation(unittest.TestCase):
             # Navigate to YouTube Canada site
             self.driver.get(r"https:\\www.dropbox.com")
 
-            # Sleep for 3 seconds to allow the site to load
-            time.sleep(10)
+            WebDriverWait(self.driver, 20).until(
+                lambda d: d.execute_script("return document.readyState") == "complete"
+            )
 
             # Assert if an RDP process exists in Windows processes
             rdp_exist = False
