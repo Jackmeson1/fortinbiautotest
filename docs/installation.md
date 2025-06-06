@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Windows 10 or Windows 11
-- Python 3.7 or higher
+- Python 3.10 or higher is recommended
 - Git
 
 ## Installation Steps
