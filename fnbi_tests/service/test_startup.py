@@ -1,6 +1,8 @@
 import os
 import time
 
+
+
 import pytest
 import yaml
 
@@ -88,9 +90,11 @@ def test_degraded_block_page_when_fpx_down(fnbi_service, fnbi_app):
     try:
         blocked_url = CONFIG["test"]["blocked_url"]
         browser.navigate_to(blocked_url)
+
         time.sleep(3)
         assert browser.is_element_present(
             "id", "fnbi-block-page"
         ), "Browser did not show block page with FPX down"
+
     finally:
         browser.close()

@@ -1,6 +1,7 @@
 import time
 
 import pytest
+from selenium.webdriver.support.ui import WebDriverWait
 
 from src.fnbi_service import FNBIService
 from src.utils import is_process_running
@@ -22,6 +23,7 @@ def test_extension_installation_trigger(browser, process_name):
 
     service.start()
     try:
+
         # Wait up to 30 seconds for the extension process to appear
         for _ in range(30):
             if is_process_running(process_name):
@@ -30,5 +32,6 @@ def test_extension_installation_trigger(browser, process_name):
         assert is_process_running(
             process_name
         ), f"{browser} extension was not installed"
+
     finally:
         service.stop()

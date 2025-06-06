@@ -1,11 +1,17 @@
-import json
+
 import logging
 import os
 
 import pytest
+
 import yaml
 from dotenv import load_dotenv
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
+
 
 load_dotenv()
 
@@ -95,7 +101,9 @@ def test_freeze_navigation(browser, fnbi_app, fnbi_service):
     try:
         print("Navigating to blank page...")
         browser.navigate_to("about:blank")
-        time.sleep(2)
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("Successfully navigated to blank page")
 
         freeze_url = config["test"]["freeze_url"]
@@ -103,7 +111,9 @@ def test_freeze_navigation(browser, fnbi_app, fnbi_service):
         browser.navigate_to(freeze_url)
         print("Navigation attempted")
 
-        time.sleep(3)  # 给冻结页面显示的时间
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("\nTaking screenshot for AI analysis...")
 
         try:
@@ -137,3 +147,4 @@ def test_freeze_navigation(browser, fnbi_app, fnbi_service):
         raise
 
     print("\n=== Test completed successfully ===")
+

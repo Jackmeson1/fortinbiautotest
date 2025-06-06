@@ -18,8 +18,9 @@ class TestBlock(unittest.TestCase):
     def test_block(self):
         self.driver.get("https://www.google.com")
 
-        # Wait for the page to load and possibly redirect. You can use WebDriverWait for better waiting mechanism
-        time.sleep(10)
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
 
         current_url = self.driver.current_url
         expected_url = "extension://gdiglidgaoimfbhfkelnlgnpghggbmbb/res/html/gatewayPage.html?action=2&reason=Policy&requestId=148&url=https%253A%252F%252Fwww.google.com%252F"

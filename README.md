@@ -22,6 +22,12 @@ This project contains automated tests for the FortiNBI application.
 
 ## Running Tests
 
+Start the mock HTTP server before executing the tests:
+
+```bash
+python mocks/simple_http_server.py &
+```
+
 To run all tests:
 
 ```

@@ -1,22 +1,28 @@
+
 import logging
 import os
 import time
 
 import pytest
+
 import yaml
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
+
 from selenium.webdriver.support.ui import WebDriverWait
+
 
 from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
+
 
 # 设置日志记录
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
 
 # 加载配置
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -93,7 +99,9 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
     try:
         print("Navigating to blank page...")
         browser.navigate_to("about:blank")
-        time.sleep(2)
+        WebDriverWait(browser.driver, 10).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         print("Successfully navigated to blank page")
 
         blocked_url = config["test"]["blocked_url"]
@@ -101,7 +109,9 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
         browser.navigate_to(blocked_url)
         print("Navigation attempted")
 
-        time.sleep(3)  # 给阻止页面显示的时间
+        WebDriverWait(browser.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "fnbi-block-page"))
+        )
         print("\nTaking screenshot for AI analysis...")
 
         try:
@@ -145,3 +155,4 @@ def test_system_setup(fnbi_app, fnbi_service):
     """
     assert fnbi_service.is_running(), "FNBI service is not running"
     assert fnbi_app.is_running(), "FNBI application is not running"
+
