@@ -1,5 +1,6 @@
 import subprocess
 import psutil
+import time
 
 
 class FortiNBIManager:
@@ -19,18 +20,47 @@ class FortiNBIManager:
             return False
 
     @staticmethod
-    def start_process(path_to_exe):
-        subprocess.Popen(path_to_exe)
+    def start_process(path_to_exe, timeout=30):
+        """Launch FortiNBI and wait for it to start.
+
+        Returns the ``subprocess.Popen`` object for the launched process.
+        """
+        proc = subprocess.Popen(path_to_exe)
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            if proc.poll() is None and FortiNBIManager.is_process_running('FortiNBI.exe'):
+                return proc
+            time.sleep(0.5)
+        raise RuntimeError('FortiNBI.exe did not start successfully')
+
+    @staticmethod
+    def stop_process(proc, timeout=10):
+        """Terminate the given process and verify it has exited."""
+        if proc is None:
+            return True
+        proc.terminate()
+        try:
+            proc.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=timeout)
+        return proc.poll() is not None and not FortiNBIManager.is_process_running('FortiNBI.exe')
+
 
 
 if __name__ == '__main__':
     manager = FortiNBIManager()
 
-    # 替换成你的 FortiNBI.exe 的完整路径
-    path_to_forti_nbi = r"C:\Program Files (x86)\Fortinet\FortiNBI\FortiNBI.exe"
+    # \u66ff\u6362\u6210\u4f60\u7684 FortiNBI.exe \u7684\u5b8c\u6574\u8def\u5f84
+    path_to_forti_nbi = r"C:\\Program Files (x86)\\Fortinet\\FortiNBI\\FortiNBI.exe"
 
+    proc = None
     if not manager.is_process_running('FortiNBI.exe'):
         print("FortiNBI.exe is not running. Starting it now...")
-        manager.start_process(path_to_forti_nbi)
+        proc = manager.start_process(path_to_forti_nbi)
     else:
         print("FortiNBI.exe is already running.")
+
+    if proc:
+        input("Press Enter to terminate FortiNBI...")
+        manager.stop_process(proc)
