@@ -11,7 +11,7 @@ import os
 import logging
 
 
-# 设置日志记录
+# Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -94,7 +94,7 @@ def test_multiple_navigation(browser):
     ), "Google homepage did not load correctly after multiple navigations"
 
 
-# 如果您的环境支持不同的浏览器，可以添加以下测试
+# If your environment supports different browsers, you can add the following tests
 @pytest.mark.skip(reason="Only run if Firefox is installed")
 def test_firefox_initialization():
     logger.info("Testing Firefox initialization")

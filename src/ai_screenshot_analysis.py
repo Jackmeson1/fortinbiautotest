@@ -9,13 +9,13 @@ from src.utils import archive_old_runs, create_run_directory, take_window_screen
 
 
 def compare_with_ai(screenshot_path, example_image_path, api_key, function_type):
-    # 读取并编码图片
+    # Read and encode the images
     with open(screenshot_path, "rb") as image_file:
         screenshot_base64 = base64.b64encode(image_file.read()).decode("utf-8")
     with open(example_image_path, "rb") as image_file:
         example_base64 = base64.b64encode(image_file.read()).decode("utf-8")
 
-    # 准备API请求
+    # Prepare the API request
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
 
     prompt = f"""You are an AI assistant specializing in analyzing browser extension functionality.
@@ -63,22 +63,22 @@ def compare_with_ai(screenshot_path, example_image_path, api_key, function_type)
         "response_format": {"type": "json_object"},
     }
 
-    # 发送API请求
+    # Send the API request
     response = requests.post(
         "https://api.openai.com/v1/chat/completions", headers=headers, json=payload
     )
     result = response.json()
     # print (result)
-    # 解析并返回结果
+    # Parse and return the result
     ai_assessment = result["choices"][0]["message"]["content"]
-    # 检查并清理字符串
+    # Check and clean up the string
     if "```" in ai_assessment:
         ai_assessment = ai_assessment.replace("```json\n", "").replace("\n```", "")
         ai_assessment = ai_assessment.replace(
             "```", ""
-        )  # 以防万一还有其他格式的代码块标记
+        )  # In case there are other types of code block markers
 
-    # 打印清理后的字符串，用于调试
+    # Print the cleaned string for debugging
     print("Cleaned assessment:", ai_assessment)
     return json.loads(ai_assessment)
 
@@ -92,19 +92,19 @@ def analyze_screenshot(window_title, example_image_path, api_key, function_type)
             screenshot_path, example_image_path, api_key, function_type
         )
 
-        # 保存 AI 分析结果
+        # Save the AI analysis result
         result_path = os.path.join(run_dir, f"{function_type}_analysis_result.json")
         with open(result_path, "w") as f:
             json.dump(ai_result, f, indent=2)
 
         return ai_result
     finally:
-        # 存档旧的运行
+        # Archive old runs
         archive_old_runs()
 
 
 if __name__ == "__main__":
-    # 使用示例
+    # Example usage
     api_key = os.getenv("OPENAI_API_KEY")
     window_title = "Chrome"
     example_image_path = os.path.join(

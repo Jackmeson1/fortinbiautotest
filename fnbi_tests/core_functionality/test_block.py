@@ -19,14 +19,14 @@ from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
 
 
-# 设置日志记录
+# Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
-# 加载配置
+# Load configuration
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
@@ -58,7 +58,7 @@ def fnbi_app():
     if not app.is_running():
         app.start()
     yield app
-    # 不在这里停止应用，让它继续运行
+    # Do not stop the application here; let it keep running
 
 
 @pytest.fixture(scope="module")
@@ -68,7 +68,7 @@ def fnbi_service():
     if not service.is_running():
         service.start()
     yield service
-    # 不在这里停止服务，让它继续运行
+    # Do not stop the service here; let it keep running
 
 
 def get_page_content(browser):
@@ -125,7 +125,7 @@ def test_blocked_navigation(browser, fnbi_app, fnbi_service):
             print(f"✓ Functionality Match: {result['functionality_match']}")
             print(f"✓ Confidence Score: {result['confidence']}")
 
-            # 核心断言
+            # Core assertions
             assert (
                 result["functionality_match"] == True
             ), "AI analysis indicates functionality does not match"

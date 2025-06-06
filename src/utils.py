@@ -73,12 +73,12 @@ from ctypes import wintypes
 
 def take_window_screenshot(window_title, save_dir, function_type):
     """
-    对指定窗口进行截图并保存到指定目录。
+    Capture a screenshot of the specified window and save it to ``save_dir``.
 
-    :param window_title: 窗口的标题
-    :param save_dir: 保存截图的目录
-    :param function_type: 功能类型（block, freeze, allow）
-    :return: 保存的截图路径
+    :param window_title: Title of the window
+    :param save_dir: Directory to store the screenshot
+    :param function_type: Function type (block, freeze, allow)
+    :return: Path to the saved screenshot
     """
     if gw is None or win32gui is None:
         raise RuntimeError(
@@ -89,20 +89,20 @@ def take_window_screenshot(window_title, save_dir, function_type):
     filename = f"{function_type}_{timestamp}.png"
     save_path = os.path.join(save_dir, filename)
     try:
-        # 查找窗口句柄
+        # Locate the window handle
         windows = gw.getWindowsWithTitle(window_title)
         if not windows:
             logging.error(f"No window found with title containing '{window_title}'")
             raise Exception(f"No window found with title containing '{window_title}'")
 
-        window = windows[0]  # 选择第一个匹配的窗口
+        window = windows[0]  # Use the first matching window
         # if not window.isActive:
         #     window.activate()
         #     win32gui.SetForegroundWindow(window._hWnd)
 
         hwnd = window._hWnd
 
-        # 获取窗口的设备上下文
+        # Get the window device context
         left, top, right, bottom = win32gui.GetClientRect(hwnd)
         width = right - left
         height = bottom - top
@@ -115,7 +115,7 @@ def take_window_screenshot(window_title, save_dir, function_type):
         saveBitMap.CreateCompatibleBitmap(mfcDC, width, height)
         saveDC.SelectObject(saveBitMap)
 
-        # 使用 ctypes 调用 PrintWindow
+        # Use ctypes to call PrintWindow
         PW_RENDERFULLCONTENT = 2
         result = ctypes.windll.user32.PrintWindow(
             hwnd, saveDC.GetSafeHdc(), PW_RENDERFULLCONTENT
@@ -141,7 +141,7 @@ def take_window_screenshot(window_title, save_dir, function_type):
         img.save(save_path)
         logging.info(f"Screenshot saved to {save_path}")
 
-        # 清理
+        # Cleanup
         win32gui.DeleteObject(saveBitMap.GetHandle())
         saveDC.DeleteDC()
         mfcDC.DeleteDC()
@@ -176,9 +176,7 @@ from datetime import datetime
 
 
 def create_run_directory():
-    """
-    创建一个唯一的运行目录来存储本次测试的截图。
-    """
+    """Create a unique run directory to store screenshots for this test."""
     project_root = os.path.dirname(os.path.dirname(__file__))
     runs_dir = os.path.join(project_root, "test_runs")
     os.makedirs(runs_dir, exist_ok=True)
@@ -191,9 +189,9 @@ def create_run_directory():
 
 def archive_old_runs(max_runs=10):
     """
-    存档旧的测试运行，只保留最新的几次运行。
+    Archive old test runs, keeping only the most recent ones.
 
-    :param max_runs: 要保留的最大运行次数
+    :param max_runs: Maximum number of runs to keep
     """
     project_root = os.path.dirname(os.path.dirname(__file__))
     runs_dir = os.path.join(project_root, "test_runs")

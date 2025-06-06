@@ -13,20 +13,20 @@ from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
 
 
-# 设置日志记录
+# Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
-# 获取当前文件的目录
+# Get the directory of the current file
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 构建到项目根目录的路径
+# Build the path to the project root
 project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 
-# 构建配置文件的完整路径
+# Build the full path to the configuration file
 config_path = os.path.join(project_root, "config", "config.yaml")
-# 加载配置
+# Load configuration
 
 config = read_config(config_path)
 

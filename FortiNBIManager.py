@@ -12,11 +12,11 @@ class FortiNBIManager:
     @staticmethod
     def is_process_running(process_name):
         try:
-            # 遍历所有的运行中的进程
+            # Iterate over all running processes
             for proc in psutil.process_iter():
-                # 获取进程详情作为字典
+                # Retrieve process information as a dictionary
                 process_info = proc.as_dict(attrs=["pid", "name", "create_time"])
-                # 检查进程名是否匹配
+                # Check whether the process name matches
                 if process_name.lower() in process_info["name"].lower():
                     return True
             return False

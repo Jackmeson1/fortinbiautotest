@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from src.utils import read_config
 import os
 
-# 创建 ChromeOptions 实例
+# Create a ChromeOptions instance
 chrome_options = Options()
 
 
@@ -17,13 +17,13 @@ cfg = read_config(config_path)
 chrome_options.add_argument(f"user-data-dir={cfg['browser']['chrome_user_data_dir']}")
 chrome_options.add_argument(f"profile-directory={cfg['browser']['chrome_profile_directory']}")
 
-# 启动 Chrome 浏览器，并加载现有配置文件（包括所有已安装的插件）
+# Launch Chrome using the existing profile (including all installed extensions)
 driver = webdriver.Chrome(options=chrome_options)
 
-# 测试浏览器中的某个操作
+# Test an action in the browser
 driver.get("https://www.dropbox.com")
 time.sleep(2)
 driver.get("https://www.cisco.com")
 time.sleep(200)
-# 关闭浏览器
+# Close the browser
 driver.quit()

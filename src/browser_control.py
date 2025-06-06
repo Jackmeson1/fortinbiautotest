@@ -53,7 +53,7 @@ class BrowserControl:
             raise ValueError("Unsupported browser type")
         logger.info(f"Browser {browser_type} initialized successfully")
 
-    # ... (其余方法保持不变)
+    # ... (other methods remain unchanged)
 
     def navigate_to(self, url):
         logger.info(f"Navigating to: {url}")
@@ -61,7 +61,7 @@ class BrowserControl:
             self.driver.get(url)
         except Exception as e:
             logger.warning(f"Exception during navigation: {e}")
-            # 可能需要在这里添加一些重试逻辑
+            # You may need to add retry logic here
             pass
 
     def is_page_loaded(self, title):
@@ -114,7 +114,7 @@ class BrowserControl:
                 if text in page_source:
                     return True
             except WebDriverException:
-                # 如果发生WebDriverException，我们简单地继续循环
+                # If a WebDriverException occurs, simply continue looping
                 pass
             time.sleep(0.5)
         return False
