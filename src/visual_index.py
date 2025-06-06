@@ -82,3 +82,7 @@ def search(
         if 0 <= idx < len(image_files):
             results.append((image_files[idx], float(score)))
     return results
+
+
+if __name__ == "__main__":
+    build_index()

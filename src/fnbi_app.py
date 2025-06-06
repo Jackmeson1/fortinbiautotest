@@ -3,7 +3,10 @@ import subprocess
 import time
 
 import psutil
-from pywinauto import Application
+try:
+    from pywinauto.application import Application
+except Exception:  # pragma: no cover - environment without pywinauto
+    Application = None
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
