@@ -2,3 +2,4 @@
 test_runs/
 archived_runs/
 .env
+__pycache__/
