@@ -1,4 +1,5 @@
 import time
+
 import pytest
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -22,9 +23,15 @@ def test_extension_installation_trigger(browser, process_name):
 
     service.start()
     try:
-        WebDriverWait(service, 30, poll_frequency=1).until(
-            lambda _: is_process_running(process_name)
-        )
-        assert is_process_running(process_name), f"{browser} extension was not installed"
+
+        # Wait up to 30 seconds for the extension process to appear
+        for _ in range(30):
+            if is_process_running(process_name):
+                break
+            time.sleep(1)
+        assert is_process_running(
+            process_name
+        ), f"{browser} extension was not installed"
+
     finally:
         service.stop()

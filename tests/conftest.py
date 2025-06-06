@@ -5,9 +5,11 @@ import datetime
 import subprocess
 from pathlib import Path
 import pytest
+
+from src.browser_control import BrowserControl
 from src.fnbi_app import FNBIApp
 from src.fnbi_service import FNBIService
-from src.browser_control import BrowserControl
+
 
 @pytest.fixture(scope="session")
 def fnbi_app():
@@ -16,12 +18,14 @@ def fnbi_app():
     yield app
     app.close()
 
+
 @pytest.fixture(scope="session")
 def fnbi_service():
     service = FNBIService()
     service.start()
     yield service
     service.stop()
+
 
 @pytest.fixture(scope="function")
 def browser():
