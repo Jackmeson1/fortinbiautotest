@@ -1,7 +1,26 @@
 # FortiNBI Automated Testing
 
-This project contains automated tests for the FortiNBI application.
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![CI](https://github.com/yourusername/fnbi-automated-testing/actions/workflows/ci.yml/badge.svg)
 
+FNBI automation test suite. Follow this quick start to run a demo suite in minutes.
+
+## 🚀 Quick Start – FNBI Automation
+
+Clone, setup, run a demo suite in 3 minutes. [Jump to configuration](#configuration).
+```bash
+git clone https://github.com/yourusername/fnbi-automated-testing.git
+cd fnbi-automated-testing
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp config/config.yaml.example config/config.yaml
+python mocks/simple_http_server.py &
+pytest -v
+```
+![FNBI automation flowchart](docs/flowchart.png)
+<!-- upload an image to docs/flowchart.png if you want to display the flowchart -->
 ## Project Structure
 
 The repository is organised into the following top-level directories:
@@ -48,6 +67,10 @@ To run tests for a specific module:
 ```
 pytest fnbi_tests/extension
 ```
+
+## Configuration
+
+Copy `config/config.yaml.example` to `config/config.yaml` and edit paths for your environment. Set the `TEST_RUNNER_PASSWORD` variable if you need to override the default.
 
 ## Documentation
 
