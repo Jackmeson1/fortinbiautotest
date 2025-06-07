@@ -2,7 +2,8 @@
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![CI](https://github.com/yourusername/fnbi-automated-testing/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Jackmeson1/fortinbiautotest/actions/workflows/ci.yml/badge.svg)
+
 
 FNBI automation test suite. Follow this quick start to run a demo suite in minutes.
 
