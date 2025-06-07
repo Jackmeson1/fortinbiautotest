@@ -26,6 +26,7 @@ The repository is organised into the following top-level directories:
 4. Install dependencies: `pip install -r requirements.txt`
 
 5. Copy `config/config.yaml.example` to `config/config.yaml` and edit the paths for your environment
+6. Set the `TEST_RUNNER_PASSWORD` environment variable to override the default `CHANGEME` password used in `test_runner.py`
 
 
 ## Running Tests
