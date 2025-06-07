@@ -20,7 +20,7 @@ cp config/config.yaml.example config/config.yaml
 python mocks/simple_http_server.py &
 pytest -v
 ```
-![FNBI automation flowchart](docs/flowchart.png)
+![FNBI automation flowchart](docs/flowchart2.png)
 <!-- upload an image to docs/flowchart.png if you want to display the flowchart -->
 ## Project Structure
 
